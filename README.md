@@ -66,3 +66,5 @@
 ## Symfony :
 
     - après avoir cloner : composer install
+    - créer la base de données : symfony console doctrine:schema:create
+    - mettre la base de données en local : symfony console doctrine:migration
