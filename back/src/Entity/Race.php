@@ -31,7 +31,7 @@ class Race
     #[ORM\ManyToOne(inversedBy: 'Race')]
     private ?Event $event = null;
 
-    #[ORM\ManyToOne(inversedBy: 'OwnedRaces')]
+    #[ORM\ManyToOne(inversedBy: 'OwnedRace')]
     private ?User $Owner = null;
 
     public function getId(): ?int
