@@ -25,6 +25,13 @@ class RaceController extends AbstractController
     #[Route('/new', name: 'app_race_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        
+        // Vérifiez si l'utilisateur est connecté
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        // Vérifiez si l'utilisateur est un administrateur
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
         $race = new Race();
         $form = $this->createForm(RaceType::class, $race);
         $form->handleRequest($request);
