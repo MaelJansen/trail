@@ -40,7 +40,7 @@ const LoginForm = () => {
   return (
     <Grid textAlign="center" style={{ height: "90vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="teal" textAlign="center">
+        <Header as="h2"  color="yellow" textAlign="center">
           Log-in to your account
         </Header>
         <Form size="large" onSubmit={handleSubmit}>
@@ -62,7 +62,7 @@ const LoginForm = () => {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
-            <Button color="teal" fluid size="large" type="submit">
+            <Button color="yellow" fluid size="large" type="submit">
               Login
             </Button>
           </Segment>
