@@ -31,6 +31,10 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            if ($form->get('IsOrganizer')->getData() == true) {
+                $user->setRoles(['ROLE_ORGANIZER']);
+            } 
+
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
