@@ -29,7 +29,16 @@ class EventController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // Vérifiez si l'utilisateur est un administrateur
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $valid = false;
+        $roles = ['ROLE_ADMIN', 'ROLE_ORGANIZER'];
+        foreach($roles as $singleRole){
+            if ($this->isGranted($singleRole)) {
+                $valid = True;
+            }
+        }
+        if (!$valid) {
+            throw $this->createAccessDeniedException();
+        }
 
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
