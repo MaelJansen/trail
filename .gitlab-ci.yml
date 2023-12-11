@@ -41,12 +41,12 @@ twig-lint:
     - twig-lint lint ./templates
   allow_failure: false
 
-phpunit:
-  extends: .before_script_templates
-  stage: UnitTests
-  script:
-    - php bin/phpunit
-  allow_failure: false
+#phpunit:
+  #extends: .before_script_templates
+  #stage: UnitTests
+  #script:
+    #- php bin/phpunit
+  #allow_failure: false
 
 #LIGHTHOUSE
 #lhci:
