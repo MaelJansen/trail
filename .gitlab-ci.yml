@@ -1,5 +1,5 @@
 default:
-  image: 
+  image: jakzal/phpqa
 .before_script_templates:
   before_script:
     - cd ./back
