@@ -19,7 +19,7 @@ const LoginForm = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, Firstname, Lastname })
       });
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       console.error(error)
     }

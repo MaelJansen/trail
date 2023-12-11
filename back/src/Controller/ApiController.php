@@ -54,7 +54,6 @@ class ApiController extends AbstractController
             return new JsonResponse(["error" => "User not found"], 400);
         }
         return new JsonResponse(["token" => $accessTokenHandler->createAccessToken($user)]);
-    }
 
      #[OA\Post(
         summary: "Register user"
