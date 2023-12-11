@@ -1,0 +1,62 @@
+default:
+  image: 
+.before_script_templates:
+  before_script:
+    - cd ./back
+    - composer install
+    - npm install
+    - npm run build
+
+stages:
+  #- lhci
+  - SecurityChecker
+  - CodingStandards
+  #- UnitTests
+
+security-checker:
+  extends: .before_script_templates
+  stage: SecurityChecker
+  script:
+    - local-php-security-checker  --path=./composer.lock
+  allow_failure: false
+
+phpcs:
+  extends: .before_script_templates
+  stage: CodingStandards
+  script:
+    - phpcs -v --standard=PSR12 --ignore=./src/Kernel.php ./src
+  allow_failure: false
+
+phpstan:
+  extends: .before_script_templates
+  stage: CodingStandards
+  script:
+    - phpstan analyse ./src
+  allow_failure: false
+
+twig-lint:
+  extends: .before_script_templates
+  stage: CodingStandards
+  script:
+    - twig-lint lint ./templates
+  allow_failure: false
+
+phpunit:
+  extends: .before_script_templates
+  stage: UnitTests
+  script:
+    - php bin/phpunit
+  allow_failure: false
+
+#LIGHTHOUSE
+#lhci:
+  #image: node:latest
+  #stage: lhci
+  #script:
+    #- cd ./back
+    #- composer install
+    #- npm install
+    #- npm run build
+    #- npm install -g @lhci/cli@0.11.x
+    #- lhci autorun
+
