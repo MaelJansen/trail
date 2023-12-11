@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import ErrorPage from "./Error";
 import Connexion from './Connexion';
 import LoginPage from './LoginPage';
+import EventsListPage from './EventsListPage';
 import { Link } from "react-router-dom";
 
 
@@ -16,9 +17,22 @@ import {
       
         {
           path: "/",
+          element:<EventsListPage />,
+          errorElement: <ErrorPage />
+        },
+
+        {
+          path: "/connexion",
           element:<LoginPage />,
           errorElement: <ErrorPage />
         },
+
+        {
+          path: "/events",
+          element:<EventsListPage />,
+          errorElement: <ErrorPage />
+        },
+
       ]);
 
   return (
