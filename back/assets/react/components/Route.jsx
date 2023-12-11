@@ -4,7 +4,6 @@ import ErrorPage from "./Error";
 import Connexion from './Connexion';
 import Register from './Register';
 import LoginPage from './LoginPage';
-import Home from './Home'
 import EventsListPage from './EventsListPage';
 import { Link } from "react-router-dom";
 
@@ -32,12 +31,6 @@ import {
         {
           path: "/events",
           element:<EventsListPage />,
-          errorElement: <ErrorPage />
-        },
-
-        {
-          path: "/home",
-          element:<Home />,
           errorElement: <ErrorPage />
         },
         {
