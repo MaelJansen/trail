@@ -18,11 +18,17 @@ security-checker:
     - local-php-security-checker  --path=./composer.lock
   allow_failure: false
 
-phpcs:
+phpcbf:
   extends: .before_script_templates
   stage: CodingStandards
   script:
     - phpcbf -v --standard=PSR12 --ignore=./src/Kernel.php ./src
+  allow_failure: true
+
+phpcs:
+  extends: .before_script_templates
+  stage: CodingStandards
+  script:
     - phpcs -v --standard=PSR12 --ignore=./src/Kernel.php ./src
   allow_failure: false
 
