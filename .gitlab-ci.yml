@@ -4,8 +4,6 @@ default:
   before_script:
     - cd ./back
     - composer install
-    - npm install
-    - npm run build
 
 stages:
   #- lhci
