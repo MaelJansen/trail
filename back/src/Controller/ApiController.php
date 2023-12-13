@@ -13,7 +13,6 @@ use App\Entity\Event;
 use App\Entity\Race;
 use App\Form\EventType;
 use Doctrine\ORM\EntityManagerInterface;
-use  Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
