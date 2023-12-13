@@ -103,7 +103,28 @@ class ApiController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $event = new Event();
+        $data = json_decode($request->getContent(), true);
+        $event = new Event;
+
+        $event->setEmail($data['name']);
+        $event->setAddress($data['address']);
+        $event->setSartDate($data['startDate']);
+        $event->setEndDate($data['endDate']);
+        $event->setRace($data['race']);
+        $event->setOwner($data['owner']);
+
+        if (1===1){
+            $entityManager->persist($event);
+            $entityManager->flush();
+        }
+
+        $jsonContent = $serializer->serialize($event, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        return $this->json($jsonContent);
+        /*$event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -117,7 +138,7 @@ class ApiController extends AbstractController
         return $this->render('event/new.html.twig', [
             'event' => $event,
             'form' => $form,
-        ]);
+        ]);*/
     }
 
     #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
