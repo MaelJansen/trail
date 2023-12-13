@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic } from 'semantic-ui-react';
+import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic, Icon } from 'semantic-ui-react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -55,56 +55,61 @@ export default function EventsList() {
 
     return (
         <Container style={{ marginTop: '5em', marginBottom: '5em' }}>
-            <Accordion styled fluid>
-                {events.map((event, index) => (
-                    <div key={index}>
-                        <Accordion.Title
-                            active={activeIndex === index}
-                            index={index}
-                            onClick={handleClick}
-                        >
-                            <h1>{event.name}</h1>
-                        </Accordion.Title>
-                        <Accordion.Content active={activeIndex === index}>
-                            <p>{event.description}</p>
-                            
+            {events.map((event, index) => (
+                <div key={index}>
+                    <Accordion styled fluid style={{ marginBottom: '2em' }}>
+                            <Accordion.Title
+                                active={activeIndex === index}
+                                index={index}
+                                onClick={handleClick}
+                            >
+                                <h1>{event.name}</h1>
+                                <Label.Group size='large'>
+                                    <Label>{event.startingDate}</Label>
+                                    <Label>{event.endingDate}</Label>
+                                    <Label>{event.localisation}</Label>
+                                </Label.Group>
+                                
+                            <Icon name='dropdown' />
+                            </Accordion.Title>
                             <Accordion.Content active={activeIndex === index}>
-                                <List>
-                                    {event.races.map((race, raceIndex) => (
-                                        <Segment>
-                                            <List.Item key={raceIndex}>
-                                                <Grid columns={2} divided>  
-                                                    <Grid.Column>
-                                                        <Grid.Row>
-                                                            <List.Header as='h3'>{race.name}</List.Header>
-                                                        </Grid.Row>
-                                                        <Grid.Row >
-                                                            <Label.Group>
-                                                                <Label>{race.date}</Label>
-                                                                <Label>{race.place}</Label>
-                                                            </Label.Group>
-                                                        </Grid.Row>
-                                                    </Grid.Column>
-                                                    <Grid.Column verticalAlign='middle' textAlign='center'>
-                                                        <Grid.Row>   
-                                                            <Statistic size='mini'>
-                                                                <Statistic.Value>{race.distance} km</Statistic.Value>
-                                                                <Statistic.Label >Distance</Statistic.Label>
-                                                            </Statistic>
-                                                            <Statistic size='mini' label='Dénivelé Positif' value={`${race.positiveHeightDiff} m`} />
-                                                            <Statistic size='mini' label='Dénivelé Négatif' value={`${race.negativeHeightDiff} m`} />
-                                                        </Grid.Row>
-                                                    </Grid.Column>
-                                                </Grid>
-                                            </List.Item>
-                                        </Segment>
-                                    ))}
-                                </List>
+                                <Accordion.Content active={activeIndex === index}>
+                                    <List>
+                                        {event.races.map((race, raceIndex) => (
+                                            <Segment>
+                                                <List.Item key={raceIndex}>
+                                                    <Grid columns={2} divided>  
+                                                        <Grid.Column>
+                                                            <Grid.Row>
+                                                                <List.Header as='h3'>{race.name}</List.Header>
+                                                            </Grid.Row>
+                                                            <Grid.Row >
+                                                                <Label.Group>
+                                                                    <Label>{race.date}</Label>
+                                                                    <Label>{race.place}</Label>
+                                                                </Label.Group>
+                                                            </Grid.Row>
+                                                        </Grid.Column>
+                                                        <Grid.Column verticalAlign='middle' textAlign='center'>
+                                                            <Grid.Row>   
+                                                                <Statistic size='mini'>
+                                                                    <Statistic.Value>{race.distance} km</Statistic.Value>
+                                                                    <Statistic.Label >Distance</Statistic.Label>
+                                                                </Statistic>
+                                                                <Statistic size='mini' label='Dénivelé Positif' value={`${race.positiveHeightDiff} m`} />
+                                                                <Statistic size='mini' label='Dénivelé Négatif' value={`${race.negativeHeightDiff} m`} />
+                                                            </Grid.Row>
+                                                        </Grid.Column>
+                                                    </Grid>
+                                                </List.Item>
+                                            </Segment>
+                                        ))}
+                                    </List>
+                                </Accordion.Content>
                             </Accordion.Content>
-                        </Accordion.Content>
-                    </div>
-                ))}
-            </Accordion>
+                    </Accordion>
+                </div>
+            ))}
         </Container>
     );
 }
