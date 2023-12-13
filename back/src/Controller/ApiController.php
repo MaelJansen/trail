@@ -30,6 +30,25 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
 {   
+    #[Route('/api/login', name: 'app_api_login', methods: ['POST'])]
+    public function login(#[CurrentUser] ?User $user, UserRepository $repository)
+    {
+        if (null === $user) {
+            return $this->json([
+                'message' => 'missing credentials',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+        $token = uniqid();
+        $user->setToken($token);
+        $repository->save($user, true);
+        return $this->json([
+            'user'  => $user->getUserIdentifier(),
+            'userId' => $user->getId(),
+            'token' => $token,
+        ]);
+    }
+
+
     #[Route("/register", name: "_register", methods: ["POST"])]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
@@ -106,11 +125,10 @@ class ApiController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $event = new Event;
 
-        $event->setEmail($data['name']);
+        $event->setName($data['name']);
         $event->setAddress($data['address']);
-        $event->setSartDate($data['startDate']);
+        $event->setStartDate($data['startDate']);
         $event->setEndDate($data['endDate']);
-        $event->setRace($data['race']);
         $event->setOwner($data['owner']);
 
         if (1===1){
@@ -225,7 +243,7 @@ class ApiController extends AbstractController
     #[Route('/race/{id}', name: 'app_race_show', methods: ['GET'])]
     public function showRace(Race $race, Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
     {
-        /*return $this->render('race/show.html.twig', [
+        /*return $this->render('race/show.html.twig', [  
             'race' => $race,
         ]);*/
         $id = $request->get('id');

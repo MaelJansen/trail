@@ -43,6 +43,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'Owner', targetEntity: Event::class)]
     private Collection $OwnedEvents;
 
+
+    #[ORM\Column(nullable: true)]
+    private ?string $token = null;
+
     public function __construct()
     {
         $this->OwnedRace = new ArrayCollection();
