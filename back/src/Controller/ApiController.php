@@ -31,7 +31,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ApiController extends AbstractController
 {   
     #[Route('/api/login', name: 'app_api_login', methods: ['POST'])]
-    public function login(#[CurrentUser] ?User $user, UserRepository $repository): Response
+    public function login(User $user, UserRepository $repository): Response
     {
         if (null === $user) {
             return $this->json([

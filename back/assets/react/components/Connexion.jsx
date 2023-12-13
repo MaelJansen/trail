@@ -40,7 +40,6 @@ const LoginForm = () => {
     axios
     .post(serverQuery, inputs)
     .then(response => {
-      alert(response.data);
       setData(response.data);
     })
     .catch(error => {
