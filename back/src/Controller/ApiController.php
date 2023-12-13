@@ -74,7 +74,7 @@ class ApiController extends AbstractController
             ];
         }
         $json = json_encode($res, JSON_PRETTY_PRINT);
-        return $json;
+        return $this->json($json);
     }
 
     #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
