@@ -28,18 +28,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
-{
-    
-    #[Route("/login", name: "_login", methods: ["POST"])]
-    public function login(#[CurrentUser] ?User $user, AccessTokenHandler $accessTokenHandler): Response
-    {
-        if (null === $user) {
-            return new JsonResponse(["error" => "User not found"], 400);
-        }
-        return new JsonResponse(["token" => $accessTokenHandler->createAccessToken($user)]);
-    }
-
-    
+{   
     #[Route("/register", name: "_register", methods: ["POST"])]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
