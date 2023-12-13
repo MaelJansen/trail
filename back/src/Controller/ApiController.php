@@ -25,6 +25,7 @@ use App\Form\RegistrationFormType;
 use App\Security\UserAuthenticator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
@@ -58,9 +59,9 @@ class ApiController extends AbstractController
     }
 
     #[Route('/event', name: 'app_event_index', methods: ['GET'])]
-    public function eventIndex(EventRepository $eventRepository): Response
+    public function eventIndex(EventRepository $eventRepository, SerializerInterface $serializer): Response
     {
-        $events = $eventRepository->findAll();
+        /*$events = $eventRepository->findAll();
         $res = [];
         foreach ($events as $event){
             $res[] = [
@@ -74,11 +75,18 @@ class ApiController extends AbstractController
             ];
         }
         $json = json_encode($res, JSON_PRETTY_PRINT);
-        return $this->json($json);
+        return $this->json($json);*/
+        $evenements = $eventRepository->findAll();
+        $jsonContent = $serializer->serialize($evenements, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        return $this->json($jsonContent);
     }
 
     #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function newEvent(Request $request, EntityManagerInterface $entityManager): Response
+    public function newEvent(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
         // Vérifiez si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -95,7 +103,28 @@ class ApiController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $event = new Event();
+        $data = json_decode($request->getContent(), true);
+        $event = new Event;
+
+        $event->setEmail($data['name']);
+        $event->setAddress($data['address']);
+        $event->setSartDate($data['startDate']);
+        $event->setEndDate($data['endDate']);
+        $event->setRace($data['race']);
+        $event->setOwner($data['owner']);
+
+        if (1===1){
+            $entityManager->persist($event);
+            $entityManager->flush();
+        }
+
+        $jsonContent = $serializer->serialize($event, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        return $this->json($jsonContent);
+        /*$event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -109,15 +138,24 @@ class ApiController extends AbstractController
         return $this->render('event/new.html.twig', [
             'event' => $event,
             'form' => $form,
-        ]);
+        ]);*/
     }
 
     #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function showEvent(Event $event): Response
+    public function showEvent(EventRepository $eventRepository, Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('event/show.html.twig', [
+        /*return $this->render('event/show.html.twig', [
             'event' => $event,
+        ]);*/
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Event::class);
+        $evenements = $repository->find($id);
+        $jsonContent = $serializer->serialize($evenements, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
         ]);
+        return $this->json($jsonContent);
     }
 
     #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['GET', 'POST'])]
@@ -185,11 +223,20 @@ class ApiController extends AbstractController
     }
 
     #[Route('/race/{id}', name: 'app_race_show', methods: ['GET'])]
-    public function showRace(Race $race): Response
+    public function showRace(Race $race, Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('race/show.html.twig', [
+        /*return $this->render('race/show.html.twig', [
             'race' => $race,
+        ]);*/
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Race::class);
+        $race = $repository->find($id);
+        $jsonContent = $serializer->serialize($race, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
         ]);
+        return $this->json($jsonContent);
     }
 
     #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['GET', 'POST'])]
