@@ -223,11 +223,20 @@ class ApiController extends AbstractController
     }
 
     #[Route('/race/{id}', name: 'app_race_show', methods: ['GET'])]
-    public function showRace(Race $race): Response
+    public function showRace(Race $race, Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('race/show.html.twig', [
+        /*return $this->render('race/show.html.twig', [
             'race' => $race,
+        ]);*/
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Race::class);
+        $race = $repository->find($id);
+        $jsonContent = $serializer->serialize($race, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
         ]);
+        return $this->json($jsonContent);
     }
 
     #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['GET', 'POST'])]
