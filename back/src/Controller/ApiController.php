@@ -5,8 +5,8 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\UserRepository;
-use App\Repository\EventRepository
-use App\Repository\RaceRepository
+use App\Repository\EventRepository;
+use App\Repository\RaceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use App\Entity\Event;
