@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import "semantic-ui-css/semantic.min.css"
-import { Button, Form, Grid, Header, Image, Segment } from "semantic-ui-react"
+import { Button, Form, Grid, Segment } from "semantic-ui-react"
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -36,10 +36,11 @@ const LoginForm = () => {
   }, [data])
 
   function getToken() {
-    let serverQuery = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}/api/login`;
+    let serverQuery = `http://localhost:8000/api/login`;
     axios
     .post(serverQuery, inputs)
     .then(response => {
+      alert(response.data);
       setData(response.data);
     })
     .catch(error => {
@@ -52,27 +53,24 @@ const LoginForm = () => {
   return (
     <Grid textAlign="center" style={{ height: "90vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2"  color="yellow" textAlign="center">
-          Log-in to your account
-        </Header>
         <Form size="large" onSubmit={handleSubmit}>
           <Segment stacked>
             <Form.Input
-              fluid
-              icon="user"
-              iconPosition="left"
-              placeholder="User name"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              type="email"
+              name="username"
+              id="username"
+              value={inputs.email}
+              onChange={handleChange}
+              required
             />
             <Form.Input
-              fluid
-              icon="lock"
-              iconPosition="left"
-              placeholder="Password"
               type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              name="password"
+              id="password"
+              value={inputs.password}
+              onChange={handleChange}
+              placeholder="Mot de passe"
+              required  
             />
             <Button color="yellow" fluid size="large" type="submit">
               Login
