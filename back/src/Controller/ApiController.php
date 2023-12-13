@@ -60,9 +60,21 @@ class ApiController extends AbstractController
     #[Route('/event', name: 'app_event_index', methods: ['GET'])]
     public function eventIndex(EventRepository $eventRepository): Response
     {
-        return $this->render('event/index.html.twig', [
-            'events' => $eventRepository->findAll(),
-        ]);
+        $events = $eventRepository->findAll();
+        $res = [];
+        foreach ($events as $event){
+            $res[] = [
+                'id' => $event->getId(),
+                'name' => $event->getName(),
+                'address' => $event->getAddress(),
+                'startDate' => $event->getStartDate()->format('Y-m-d H:i:s'),
+                'endDate' => $event->getEndDate()->format('Y-m-d H:i:s'),
+                'races' => $event->getRace(),
+                'owner' => $event->getOwner()
+            ];
+        }
+        $json = json_encode($res, JSON_PRETTY_PRINT);
+        return $json;
     }
 
     #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
