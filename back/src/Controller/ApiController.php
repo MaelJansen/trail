@@ -61,4 +61,156 @@ class ApiController extends AbstractController
             $request
         );
     }
+
+    #[Route('/event', name: 'app_event_index', methods: ['GET'])]
+    public function eventIndex(EventRepository $eventRepository): Response
+    {
+        return $this->render('event/index.html.twig', [
+            'events' => $eventRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
+    public function newEvent(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifiez si l'utilisateur est connecté
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        // Vérifiez si l'utilisateur est un administrateur
+        $valid = false;
+        $roles = ['ROLE_ADMIN', 'ROLE_ORGANIZER'];
+        foreach($roles as $singleRole){
+            if ($this->isGranted($singleRole)) {
+                $valid = True;
+            }
+        }
+        if (!$valid) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $event = new Event();
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($event);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('event/new.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
+    public function showEvent(Event $event): Response
+    {
+        return $this->render('event/show.html.twig', [
+            'event' => $event,
+        ]);
+    }
+
+    #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    public function editEvent(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('event/edit.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/event/delete/{id}', name: 'app_event_delete', methods: ['POST'])]
+    public function deleteEvent(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($event);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/race', name: 'app_race_index', methods: ['GET'])]
+    public function raceIndex(RaceRepository $raceRepository): Response
+    {
+        return $this->render('race/index.html.twig', [
+            'races' => $raceRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/race/new', name: 'app_race_new', methods: ['GET', 'POST'])]
+    public function newRace(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        
+        // Vérifiez si l'utilisateur est connecté
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        // Vérifiez si l'utilisateur est un administrateur
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $race = new Race();
+        $form = $this->createForm(RaceType::class, $race);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($race);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('race/new.html.twig', [
+            'race' => $race,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/race/{id}', name: 'app_race_show', methods: ['GET'])]
+    public function showRace(Race $race): Response
+    {
+        return $this->render('race/show.html.twig', [
+            'race' => $race,
+        ]);
+    }
+
+    #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['GET', 'POST'])]
+    public function editRace(Request $request, Race $race, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(RaceType::class, $race);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('race/edit.html.twig', [
+            'race' => $race,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/race/delete/{id}', name: 'app_race_delete', methods: ['POST'])]
+    public function deleteRace(Request $request, Race $race, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$race->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($race);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
