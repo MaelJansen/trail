@@ -121,11 +121,20 @@ class ApiController extends AbstractController
     }
 
     #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function showEvent(Event $event): Response
+    public function showEvent(EventRepository $eventRepository, Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('event/show.html.twig', [
+        /*return $this->render('event/show.html.twig', [
             'event' => $event,
+        ]);*/
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Event::class);
+        $evenements = $repository->find($id);
+        $jsonContent = $serializer->serialize($evenements, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
         ]);
+        return $this->json($jsonContent);
     }
 
     #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['GET', 'POST'])]
