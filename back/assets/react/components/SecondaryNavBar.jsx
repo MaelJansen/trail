@@ -23,7 +23,7 @@ export default function SecondaryNavBar() {
             <Segment color='yellow' inverted>
                 <Grid columns={3} relaxed='very' divided>
                     <Grid.Column>
-                        <Header as='h2' color='black' inverted>
+                        <Header as='h2' color='black' inverted textAlign='center'>
                             Events
                         </Header>
                     </Grid.Column>
