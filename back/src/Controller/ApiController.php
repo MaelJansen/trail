@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Entity\Event;
 use App\Entity\Race;
 use App\Form\EventType;
+use App\Form\RaceType;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
