@@ -16,7 +16,7 @@ export default function Header() {
     return (<div class="header">
                 <div class="top">
                     <div class="logo">
-                        <h2 style={{color:"#FBBD08"}}>MounTrail</h2>
+                        <h1 style={{color:"#FBBD08"}}>MounTrail</h1>
                     </div>
                     <div class="menu">
                         <ul>
