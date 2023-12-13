@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List } from 'semantic-ui-react';
+import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic } from 'semantic-ui-react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,8 +21,8 @@ export default function EventsList() {
                 endingDate: '2021-01-02', 
                 localisation : 'Paris',
                 races: [
-                    { name: 'Race 1', place: 'Place 1', date: '2021-01-01', positiveHeightDiff: 100, negativeHeightDiff: 50 },
-                    { name: 'Race 2', place: 'Place 2', date: '2021-01-02', positiveHeightDiff: 200, negativeHeightDiff: 100 },
+                    { name: 'Race 1', place: 'Place 1', date: '2021-01-01', positiveHeightDiff: 100, negativeHeightDiff: 50, distance:16.5 },
+                    { name: 'Race 2', place: 'Place 2', date: '2021-01-02', positiveHeightDiff: 200, negativeHeightDiff: 100, distance:22.9 },
                 ]
             },
             { 
@@ -32,8 +32,8 @@ export default function EventsList() {
                 endingDate: '2021-02-02', 
                 localisation : 'Lyon',
                 races: [
-                    { name: 'Race 3', place: 'Place 3', date: '2021-02-01', positiveHeightDiff: 150, negativeHeightDiff: 75 },
-                    { name: 'Race 4', place: 'Place 4', date: '2021-02-02', positiveHeightDiff: 180, negativeHeightDiff: 90 },
+                    { name: 'Race 3', place: 'Place 3', date: '2021-02-01', positiveHeightDiff: 150, negativeHeightDiff: 75, distance:11.2 },
+                    { name: 'Race 4', place: 'Place 4', date: '2021-02-02', positiveHeightDiff: 180, negativeHeightDiff: 90, distance:14 },
                 ]
             },
             // Add more events with races as needed
@@ -55,7 +55,6 @@ export default function EventsList() {
 
     return (
         <Container style={{ marginTop: '5em', marginBottom: '5em' }}>
-            <h1>Events List</h1>
             <Accordion styled fluid>
                 {events.map((event, index) => (
                     <div key={index}>
@@ -72,17 +71,33 @@ export default function EventsList() {
                             <Accordion.Content active={activeIndex === index}>
                                 <List>
                                     {event.races.map((race, raceIndex) => (
-                                        <List.Item key={raceIndex}>
-                                            <List.Content>
-                                                <List.Header>{race.name}</List.Header>
-                                                <List.Description style={{ display: 'flex', flexDirection: 'row' }}>
-                                                    <p style={{ marginRight: '1em' }}>{race.place}</p>
-                                                    <p style={{ marginRight: '1em' }}>{race.date}</p>
-                                                    <p style={{ marginRight: '1em' }}>Positive Height Diff: {race.positiveHeightDiff}</p>
-                                                    <p style={{ marginRight: '1em' }}>Negative Height Diff: {race.negativeHeightDiff}</p>
-                                                </List.Description>
-                                            </List.Content>
-                                        </List.Item>
+                                        <Segment>
+                                            <List.Item key={raceIndex}>
+                                                <Grid columns={2} divided>  
+                                                    <Grid.Column>
+                                                        <Grid.Row>
+                                                            <List.Header as='h3'>{race.name}</List.Header>
+                                                        </Grid.Row>
+                                                        <Grid.Row >
+                                                            <Label.Group>
+                                                                <Label>{race.date}</Label>
+                                                                <Label>{race.place}</Label>
+                                                            </Label.Group>
+                                                        </Grid.Row>
+                                                    </Grid.Column>
+                                                    <Grid.Column verticalAlign='middle' textAlign='center'>
+                                                        <Grid.Row>   
+                                                            <Statistic size='mini'>
+                                                                <Statistic.Value>{race.distance} km</Statistic.Value>
+                                                                <Statistic.Label >Distance</Statistic.Label>
+                                                            </Statistic>
+                                                            <Statistic size='mini' label='Dénivelé Positif' value={`${race.positiveHeightDiff} m`} />
+                                                            <Statistic size='mini' label='Dénivelé Négatif' value={`${race.negativeHeightDiff} m`} />
+                                                        </Grid.Row>
+                                                    </Grid.Column>
+                                                </Grid>
+                                            </List.Item>
+                                        </Segment>
                                     ))}
                                 </List>
                             </Accordion.Content>

@@ -1,13 +1,13 @@
 import React from 'react';
 import {Link}  from "react-router-dom";
 import 'semantic-ui-css/semantic.min.css';
-import { Button } from 'semantic-ui-react';
+import { Button, Header } from 'semantic-ui-react';
 import { useNavigate } from "react-router-dom";
 import LoginPage from './LoginPage';
  
 
 
-export default function Header() {
+export default function NavBar() {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();
@@ -16,7 +16,7 @@ export default function Header() {
     return (<div class="header">
                 <div class="top">
                     <div class="logo">
-                        <h1 style={{color:"#FBBD08"}}>MounTrail</h1>
+                        <Header as='h1' color='orange'>MounTrail</Header>
                     </div>
                     <div class="menu">
                         <ul>
