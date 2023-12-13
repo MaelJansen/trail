@@ -25,6 +25,7 @@ use App\Form\RegistrationFormType;
 use App\Security\UserAuthenticator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
@@ -58,9 +59,9 @@ class ApiController extends AbstractController
     }
 
     #[Route('/event', name: 'app_event_index', methods: ['GET'])]
-    public function eventIndex(EventRepository $eventRepository): Response
+    public function eventIndex(EventRepository $eventRepository, SerializerInterface $serializer): Response
     {
-        $events = $eventRepository->findAll();
+        /*$events = $eventRepository->findAll();
         $res = [];
         foreach ($events as $event){
             $res[] = [
@@ -74,7 +75,14 @@ class ApiController extends AbstractController
             ];
         }
         $json = json_encode($res, JSON_PRETTY_PRINT);
-        return $this->json($json);
+        return $this->json($json);*/
+        $evenements = $eventRepository->findAll();
+        $jsonContent = $serializer->serialize($evenements, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        return $this->json($jsonContent);
     }
 
     #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
