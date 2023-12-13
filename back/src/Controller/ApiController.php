@@ -86,7 +86,7 @@ class ApiController extends AbstractController
     }
 
     #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function newEvent(Request $request, EntityManagerInterface $entityManager): Response
+    public function newEvent(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
         // Vérifiez si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
