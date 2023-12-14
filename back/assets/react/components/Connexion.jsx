@@ -1,66 +1,75 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import "semantic-ui-css/semantic.min.css"
-import { Button, Form, Grid, Header, Image, Segment } from "semantic-ui-react"
+import { Button, Form, Grid, Segment } from "semantic-ui-react"
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  
+  const [inputs, setInputs] = useState({email: "", password: ""});
+  const [data, setData] = useState({});
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    try {
-      const response = await fetch('http://localhost:8000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await response.json();
-      console.log(data.token);
-      console.log(data);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', username);
-      if (response.ok) {
-        setIsLoggedIn(true)
-      } else {
-        console.error(data.detail)
-      }
-    } catch (error) {
-      console.error(error)
-    }
+  if(localStorage.getItem("userId")){
+    navigate("/");
+  }
+  
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs(values => ({...values, [name]: value}));
   }
 
-  if (isLoggedIn) {
-    navigate("/")
-    window.location.reload()
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    getToken();
+  }
+
+  useEffect(() =>{
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
+      navigate('/');
+    } else {
+      return;
+    } 
+  }, [data])
+
+  function getToken() {
+    let serverQuery = `http://localhost:8000/api/login`;
+    axios
+    .post(serverQuery, inputs)
+    .then(response => {
+      setData(response.data);
+    })
+    .catch(error => {
+      setData({
+        "error": error.response.status
+      })
+    })
   }
 
   return (
     <Grid textAlign="center" style={{ height: "90vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2"  color="yellow" textAlign="center">
-          Log-in to your account
-        </Header>
         <Form size="large" onSubmit={handleSubmit}>
           <Segment stacked>
             <Form.Input
-              fluid
-              icon="user"
-              iconPosition="left"
-              placeholder="User name"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              type="email"
+              name="email"
+              id="email"
+              value={inputs.email}
+              onChange={handleChange}
+              required
             />
             <Form.Input
-              fluid
-              icon="lock"
-              iconPosition="left"
-              placeholder="Password"
               type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              name="password"
+              id="password"
+              value={inputs.password}
+              onChange={handleChange}
+              placeholder="Mot de passe"
+              required  
             />
             <Button color="yellow" fluid size="large" type="submit">
               Login
