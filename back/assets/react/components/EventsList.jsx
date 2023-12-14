@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic, Icon } from 'semantic-ui-react';
+import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic, Icon, Loader } from 'semantic-ui-react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -18,18 +18,22 @@ export default function EventsList() {
           })
     
           .then((response) => {
-            console.log(response.data)
             setEvents(response.data)
-            for (let i = 0; i < response.data.length; i++) {
-              console.log(response.data[i])
-            }
           })
           .catch((error) => {
             console.log(error)
           })
       }, [])
-    
 
+      if (events.length === 0) {
+        return (
+        <Container style={{ marginTop: '5em', marginBottom: '5em' }}>
+          <Accordion styled fluid style={{ padding: '2em' }}>
+            <Loader active inline='centered' />
+          </Accordion>
+        </Container>
+        )
+    }
     return (
         <Event events={events} />
     );

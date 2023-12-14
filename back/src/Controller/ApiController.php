@@ -269,12 +269,12 @@ class ApiController extends AbstractController
         ]);*/
         $id = $request->get('id');
         $repository = $entityManager->getRepository(Race::class);
-        $race = $repository->find($id);
-        $jsonContent = $serializer->serialize($race, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
-        ]);
+        $race = $repository->findOneBy(['id' => $id]);
+
+        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
+        $jsonContent = $serializer->normalize($race, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference', 'Event'=>['id','Name']]]);
+
+
         return $this->json($jsonContent);
     }
 

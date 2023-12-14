@@ -1,10 +1,10 @@
 import React from 'react';
-import {Link}  from "react-router-dom";
+import { Link } from "react-router-dom";
 import 'semantic-ui-css/semantic.min.css';
-import { Button, Header } from 'semantic-ui-react';
+import { Button, Header, Icon } from 'semantic-ui-react';
 import { useNavigate } from "react-router-dom";
 import LoginPage from './LoginPage';
- 
+import { Menu, Container, Image, Dropdown } from 'semantic-ui-react'
 
 
 export default function NavBar() {
@@ -13,21 +13,38 @@ export default function NavBar() {
         localStorage.clear();
         navigate('/connexion');
     }
-    return (<div class="header">
-                <div class="top">
-                    <div class="logo">
-                        <Header as='h1' color='orange'>MounTrail</Header>
-                    </div>
-                    <div class="menu">
-                        <ul>
-                            <li><Link to="/events">Accueil</Link></li>
-                            {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
-                                <li><Button basic onClick={logout}>Logout</Button></li>
-                                :
-                                <li><Link to="/connexion">Connexion</Link></li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>);
+    return (
+        <Menu fixed='top' color='orange'>
+            <Container textAlign='left'>
+                <Menu.Item color='orange'>MounTrail</Menu.Item>
+                <Menu.Menu position='right'>
+                    <Menu.Item><Link to="/events" style={{ textDecoration: 'none', color: 'black' }}>Accueil</Link></Menu.Item>
+                    <Menu.Item>
+                        {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
+                            <Button basic onClick={logout}>Logout</Button>
+                            :
+                            <Link to="/connexion" style={{ textDecoration: 'none', color: 'black' }}>Connexion</Link>
+                        }
+                        <Icon name='user' style={{marginLeft: '0.5em'}}/>
+                    </Menu.Item>
+                    <Menu.Item>
+
+                        <Dropdown trigger={<Icon name='bars' />} icon={null}>
+                            <Dropdown.Menu>
+                                <Dropdown.Item><Link to="/events" style={{ textDecoration: 'none', color: 'black' }}>Accueil</Link></Dropdown.Item>
+                                <Dropdown.Item>
+                                    {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
+                                        <Button basic onClick={logout}>Logout</Button>
+                                        :
+                                        <Link to="/connexion" style={{ textDecoration: 'none', color: 'black' }}>Connexion</Link>
+                                    }<Icon name='user' style={{marginLeft: '0.5em'}}/></Dropdown.Item>
+
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Menu.Item>
+                </Menu.Menu>
+            </Container>
+        </Menu>
+
+    )
 }
