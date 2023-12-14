@@ -33,6 +33,8 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 
 
@@ -121,59 +123,40 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function newEvent(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
+    #[Route('/event/new', name: 'app_event_new', methods: ['POST'])]
+    public function newEvent(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
-        // Vérifiez si l'utilisateur est connecté
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        // Vérifiez si l'utilisateur est un administrateur
-        $valid = false;
-        $roles = ['ROLE_ADMIN', 'ROLE_ORGANIZER'];
-        foreach($roles as $singleRole){
-            if ($this->isGranted($singleRole)) {
-                $valid = True;
-            }
-        }
-        if (!$valid) {
-            throw $this->createAccessDeniedException();
-        }
-
         $data = json_decode($request->getContent(), true);
         $event = new Event;
 
         $event->setName($data['name']);
         $event->setAddress($data['address']);
-        $event->setStartDate($data['startDate']);
-        $event->setEndDate($data['endDate']);
-        $event->setOwner($data['owner']);
+        $event->setStartDate(new \DateTime($data['startDate']));
+        $event->setEndDate(new \DateTime($data['endDate']));
 
-        if (1===1){
-            $entityManager->persist($event);
-            $entityManager->flush();
-        }
-
-        $jsonContent = $serializer->serialize($event, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
+        // Validate the form data
+        $errors = $validator->validate($event);
+        if (count($errors) > 0) {
+            print_r($errors);
+            // Return the validation errors as JSON response
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
             }
-        ]);
-        return $this->json($jsonContent);
-        /*$event = new Event();
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($event);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->render('event/new.html.twig', [
-            'event' => $event,
-            'form' => $form,
-        ]);*/
+        // Persist the event in the database
+        $entityManager->persist($event);
+        $entityManager->flush();
+
+        // Serialize the event object
+        $serializedEvent = $serializer->normalize($event, null, [
+            AbstractNormalizer::ATTRIBUTES => ['id', 'name', 'startDate', 'endDate', 'address']
+        ]);
+
+        // Return the serialized event as JSON response
+        return $this->json($serializedEvent);
     }
 
     #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
@@ -229,31 +212,53 @@ class ApiController extends AbstractController
         ]);
     }
 
-    #[Route('/race/new', name: 'app_race_new', methods: ['GET', 'POST'])]
-    public function newRace(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/race/new', name: 'app_race_new', methods: ['POST'])]
+    public function newRace(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
-        
+        /*
         // Vérifiez si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // Vérifiez si l'utilisateur est un administrateur
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        */
         
-        $race = new Race();
-        $form = $this->createForm(RaceType::class, $race);
-        $form->handleRequest($request);
+        $data = json_decode($request->getContent(), true);
+        $race = new Race;
+        $race->setName($data['name']);
+        $race->setAddress($data['address']);
+        $race->setDistance($data['distance']);
+        $race->setPositiveDifference($data['positiveDifference']);
+        $race->setNegativeDifference($data['negativeDifference']);   
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($race);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
+        // Validate the form data
+        $errors = $validator->validate($race);
+        if (count($errors) > 0) {
+            print_r($errors);
+            // Return the validation errors as JSON response
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->render('race/new.html.twig', [
-            'race' => $race,
-            'form' => $form,
+        // Persist the race in the database
+        $entityManager->persist($race);
+        $entityManager->flush();
+
+
+
+        // Serialize the race object
+        $serializedRace = $serializer->normalize($race, null, [
+            AbstractNormalizer::ATTRIBUTES => ['id', 'name', 'address', 'distance', 'positiveDifference', 'negativeDifference']
         ]);
+
+        // Return the serialized event as JSON response
+        return $this->json($serializedRace);
+
+        
     }
 
     #[Route('/race/{id}', name: 'app_race_show', methods: ['GET'])]
