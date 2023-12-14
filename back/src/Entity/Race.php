@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RaceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 
@@ -16,18 +17,23 @@ class Race
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $Name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $Address = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
     private ?float $Distance = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
     private ?float $PositiveDifference = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
     private ?float $NegativeDifference = null;
 
     #[ORM\ManyToOne(inversedBy: 'Race')]
