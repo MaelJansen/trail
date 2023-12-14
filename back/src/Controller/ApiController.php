@@ -74,7 +74,7 @@ class ApiController extends AbstractController
             ->select('e')
             ->from(Event::class, 'e')
             ->orderBy('e.id', 'ASC')
-            ->setMaxResults(3);
+            ->setMaxResults(10);
 
         $events = $queryBuilder->getQuery()->getResult();
 
@@ -149,12 +149,11 @@ class ApiController extends AbstractController
         ]);*/
         $id = $request->get('id');
         $repository = $entityManager->getRepository(Event::class);
-        $evenements = $repository->find($id);
-        $jsonContent = $serializer->serialize($evenements, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
-        ]);
+        $event = $repository->findOneBy(['id' => $id]);
+
+        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
+
+        $jsonContent = $serializer->normalize($event, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Owner'=>['id','Firstname','Lastname','email'], 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
         return $this->json($jsonContent);
     }
 
