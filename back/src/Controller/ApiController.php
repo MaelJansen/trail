@@ -121,9 +121,10 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/event/new', name: 'app_event_new', methods: ['GET', 'POST'])]
+    #[Route('/event/new', name: 'app_event_new', methods: ['POST'])]
     public function newEvent(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
-    {
+    {   
+        /*
         // Vérifiez si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -138,42 +139,28 @@ class ApiController extends AbstractController
         if (!$valid) {
             throw $this->createAccessDeniedException();
         }
+        */
 
         $data = json_decode($request->getContent(), true);
         $event = new Event;
 
         $event->setName($data['name']);
         $event->setAddress($data['address']);
-        $event->setStartDate($data['startDate']);
-        $event->setEndDate($data['endDate']);
-        $event->setOwner($data['owner']);
+        $event->setStartDate(new \DateTime($data['startDate']));
+        $event->setEndDate(new \DateTime($data['endDate']));    
 
-        if (1===1){
-            $entityManager->persist($event);
-            $entityManager->flush();
-        }
+        // Persist the event in the database
+        $entityManager->persist($event);
+        $entityManager->flush();
 
-        $jsonContent = $serializer->serialize($event, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
+        // Serialize the event object
+        $serializedEvent = $serializer->normalize($event, null, [
+            AbstractNormalizer::ATTRIBUTES => ['id', 'name', 'startDate', 'endDate', 'address']
         ]);
-        return $this->json($jsonContent);
-        /*$event = new Event();
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($event);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('event/new.html.twig', [
-            'event' => $event,
-            'form' => $form,
-        ]);*/
+        // Return the serialized event as JSON response
+        return $this->json($serializedEvent);
+        
     }
 
     #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
