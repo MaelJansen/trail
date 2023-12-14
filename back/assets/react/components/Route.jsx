@@ -5,6 +5,7 @@ import Connexion from './Connexion';
 import Register from './Register';
 import LoginPage from './LoginPage';
 import EventsListPage from './EventsListPage';
+import EventDetailsPage from './EventDetailsPage';
 import { Link } from "react-router-dom";
 
 
@@ -31,6 +32,11 @@ import {
         {
           path: "/events",
           element:<EventsListPage />,
+          errorElement: <ErrorPage />
+        },
+        {
+          path: "/event/:eventId",
+          element:<EventDetailsPage />,
           errorElement: <ErrorPage />
         },
         {
