@@ -213,7 +213,7 @@ class ApiController extends AbstractController
     }
 
     #[Route('/race/new', name: 'app_race_new', methods: ['POST'])]
-    public function newRace(Request $request, EntityManagerInterface $entityManager): Response
+    public function newRace(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
         /*
         // Vérifiez si l'utilisateur est connecté
@@ -232,9 +232,23 @@ class ApiController extends AbstractController
         $race->setPositiveDifference($data['positiveDifference']);
         $race->setNegativeDifference($data['negativeDifference']);   
 
+        // Validate the form data
+        $errors = $validator->validate($race);
+        if (count($errors) > 0) {
+            print_r($errors);
+            // Return the validation errors as JSON response
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+        }
+
         // Persist the race in the database
         $entityManager->persist($race);
         $entityManager->flush();
+
+
 
         // Serialize the race object
         $serializedRace = $serializer->normalize($race, null, [
