@@ -43,7 +43,7 @@ class ApiController extends AbstractController
     public function login(Request $request, UserRepository $repository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
-        $user = $repository->getOneUser($data['username']);
+        $user = $repository->getOneUser($data['email']);
         $user->setPassword(
             $userPasswordHasher->hashPassword(
                 $user,
@@ -53,7 +53,7 @@ class ApiController extends AbstractController
         $allUsers = $repository->findAll();
         $exist = FALSE;
         foreach ($allUsers as $userTest){
-            if($data['username'] === $userTest->getEmail() && $user->getPassword() === $userTest->getPassword()){
+            if($data['email'] === $userTest->getEmail() && $user->getPassword() === $userTest->getPassword()){
                 $exist = True;
             }
         }
