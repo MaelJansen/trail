@@ -6,14 +6,13 @@ import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic, Ic
 export default function Race(props) {
     
     return (
-        <p>
         <List>{Array.isArray(props.races) && props.races.map((race, raceIndex) => (
             <Segment>
                 <List.Item key={raceIndex}>
                     <Grid columns={2}>
                         <Grid.Column>
                             <Grid.Row>
-                                <List.Header as='h3'>{race.Name}</List.Header>
+                                <List.Header as='h3'><Link to={`/race/${race.id}`}>{race.Name}</Link></List.Header>
                             </Grid.Row>
                             <Grid.Row >
                                 <Label.Group>
@@ -32,6 +31,6 @@ export default function Race(props) {
                     </Grid>
                 </List.Item>
             </Segment>
-        ))}</List></p>
+        ))}</List>
     )
 }
