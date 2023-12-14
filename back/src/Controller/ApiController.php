@@ -30,12 +30,28 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
 {   
-    #[Route('/api/login', name: 'app_api_login', methods: ['POST'])]
-    public function login(User $user, UserRepository $repository): Response
+    #[Route('/login', name: 'app_api_login', methods: ['POST'])]
+    public function login(Request $request, UserRepository $repository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
-        if (null === $user) {
+        $data = json_decode($request->getContent(), true);
+        $user = $repository->getOneUser($data['username']);
+        $user->setPassword(
+            $userPasswordHasher->hashPassword(
+                $user,
+                $data['password']
+            )
+        );
+        $allUsers = $repository->findAll();
+        $exist = FALSE;
+        foreach ($allUsers as $userTest){
+            if($data['username'] === $userTest->getEmail() && $user->getPassword() === $userTest->getPassword()){
+                $exist = True;
+            }
+        }
+        if (!$exist) {
             return $this->json([
                 'message' => 'missing credentials',
+                'user' => $user
             ], Response::HTTP_UNAUTHORIZED);
         }
         $token = uniqid();

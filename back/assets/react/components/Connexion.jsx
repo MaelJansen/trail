@@ -7,7 +7,7 @@ import { Button, Form, Grid, Segment } from "semantic-ui-react"
 const LoginForm = () => {
   const navigate = useNavigate();
   
-  const [inputs, setInputs] = useState({username: "", password: ""});
+  const [inputs, setInputs] = useState({email: "", password: ""});
   const [data, setData] = useState({});
 
   if(localStorage.getItem("userId")){
@@ -56,8 +56,8 @@ const LoginForm = () => {
           <Segment stacked>
             <Form.Input
               type="email"
-              name="username"
-              id="username"
+              name="email"
+              id="email"
               value={inputs.email}
               onChange={handleChange}
               required
