@@ -26,6 +26,15 @@ use App\Security\UserAuthenticator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+
 
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
@@ -94,30 +103,21 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/event', name: 'app_event_index', methods: ['GET'])]
-    public function eventIndex(EventRepository $eventRepository, SerializerInterface $serializer): Response
+    #[Route('/events', name: "iterate_event", methods: ['GET'])]
+    public function iterateEvents(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
-        /*$events = $eventRepository->findAll();
-        $res = [];
-        foreach ($events as $event){
-            $res[] = [
-                'id' => $event->getId(),
-                'name' => $event->getName(),
-                'address' => $event->getAddress(),
-                'startDate' => $event->getStartDate()->format('Y-m-d H:i:s'),
-                'endDate' => $event->getEndDate()->format('Y-m-d H:i:s'),
-                'races' => $event->getRace(),
-                'owner' => $event->getOwner()
-            ];
-        }
-        $json = json_encode($res, JSON_PRETTY_PRINT);
-        return $this->json($json);*/
-        $evenements = $eventRepository->findAll();
-        $jsonContent = $serializer->serialize($evenements, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
-        ]);
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('e')
+            ->from(Event::class, 'e')
+            ->orderBy('e.id', 'ASC')
+            ->setMaxResults(10);
+
+        $events = $queryBuilder->getQuery()->getResult();
+
+        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
+
+        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
+
         return $this->json($jsonContent);
     }
 
@@ -184,12 +184,11 @@ class ApiController extends AbstractController
         ]);*/
         $id = $request->get('id');
         $repository = $entityManager->getRepository(Event::class);
-        $evenements = $repository->find($id);
-        $jsonContent = $serializer->serialize($evenements, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
-        ]);
+        $event = $repository->findOneBy(['id' => $id]);
+
+        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
+
+        $jsonContent = $serializer->normalize($event, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Owner'=>['id','Firstname','Lastname','email'], 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
         return $this->json($jsonContent);
     }
 

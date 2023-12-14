@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\RaceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
+
 #[ORM\Entity(repositoryClass: RaceRepository::class)]
 class Race
 {

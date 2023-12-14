@@ -11,7 +11,7 @@ const Footer = () => (
       <Container textAlign='center'>
         <Grid stackable>
           <Grid.Column width={8}>
-            <Header as='h3' content='IUT - Bordeaux' color="yellow"/>
+            <Header as='h3' content='IUT - Bordeaux' color="orange"/>
             <List>
               <List.Item>15 rue Naudet - CS 10207</List.Item>
               <List.Item>33 175 Gradignan Cedex</List.Item>
@@ -19,7 +19,7 @@ const Footer = () => (
             </List>
           </Grid.Column>
           <Grid.Column width={8}>
-            <Header as='h3' content='Liens' color="yellow" />
+            <Header as='h3' content='Liens' color="orange" />
             <List link>
               <List.Item as='a' href='https://www.iut.u-bordeaux.fr/general/'>IUT de Bordeaux</List.Item>
               <List.Item as='a'>Nous contacter</List.Item>
