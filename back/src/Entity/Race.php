@@ -5,41 +5,35 @@ namespace App\Entity;
 use App\Repository\RaceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
+
 #[ORM\Entity(repositoryClass: RaceRepository::class)]
 class Race
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['group1'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['group1'])]
     private ?string $Name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['group1'])]
     private ?string $Address = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['group1'])]
     private ?float $Distance = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['group1'])]
     private ?float $PositiveDifference = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['group1'])]
     private ?float $NegativeDifference = null;
 
     #[ORM\ManyToOne(inversedBy: 'Race')]
-    #[Ignore]
     private ?Event $event = null;
 
     #[ORM\ManyToOne(inversedBy: 'OwnedRace')]
-    #[Ignore]
     private ?User $Owner = null;
 
     public function getId(): ?int

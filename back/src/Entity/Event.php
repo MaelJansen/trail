@@ -8,33 +8,28 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['group1'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['group1'])]
     private ?string $Name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['group1'])]
     private ?string $Address = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['group1'])]
     private ?\DateTimeInterface $StartDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['group1'])]
     private ?\DateTimeInterface $EndDate = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Race::class)]
-    #[Groups(['group1'])]
     private Collection $Race;
 
     #[ORM\ManyToOne(inversedBy: 'OwnedEvents')]
