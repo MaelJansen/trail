@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $Firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -42,6 +42,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'Owner', targetEntity: Event::class)]
     private Collection $OwnedEvents;
+
+
+    #[ORM\Column(nullable: true)]
+    private ?string $token = null;
 
     public function __construct()
     {
@@ -199,6 +203,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ownedEvent->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setToken(?string $Token): self
+    {
+        $this->token = $Token;
 
         return $this;
     }

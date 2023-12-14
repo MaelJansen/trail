@@ -49,6 +49,7 @@ const LoginForm = () => {
             />
             <Form.Input
               fluid
+              type="email"
               icon="mail"
               iconPosition="left"
               placeholder="Mail"
