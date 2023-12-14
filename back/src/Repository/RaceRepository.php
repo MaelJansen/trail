@@ -21,6 +21,18 @@ class RaceRepository extends ServiceEntityRepository
         parent::__construct($registry, Race::class);
     }
 
+    public function getOneRace(string $name): ?Race
+    {
+        $race = $this->createQueryBuilder('r')
+            ->andWhere('r.name = :val')
+            ->setParameter('val', $name)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $race;
+    }
+
 //    /**
 //     * @return Race[] Returns an array of Race objects
 //     */

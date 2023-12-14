@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ModalNewRace from './ModalNewRace';
 import ModalNewEvent from './ModalNewEvent';
-
+import ModalLinkRaceEvent from './ModalLinkRaceEvent';
 
 
 
@@ -28,7 +28,7 @@ export default function SecondaryNavBar() {
                     </Grid.Column>
                     <Grid.Column textAlign='center'>
                         <ModalNewRace />
-                        <Button icon='linkify' content='Link' style={{backgroundColor: 'white', color: 'black'}}></Button>
+                        <ModalLinkRaceEvent></ModalLinkRaceEvent>{/*<Button icon='linkify' content='Link' style={{backgroundColor: 'white', color: 'black'}}></Button>*/}
                         <ModalNewEvent />
 
                     </Grid.Column>
