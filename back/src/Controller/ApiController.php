@@ -387,4 +387,15 @@ class ApiController extends AbstractController
 
         return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/role', name: 'app_role', methods: ['POST'])]
+    public function role(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true); 
+        $repository = $entityManager->getRepository(User::class);
+        $user = $repository->getUserByToken($data['token']);
+        return $this->json([
+            'role' => $user->getRoles()
+        ]);
+    }
 }

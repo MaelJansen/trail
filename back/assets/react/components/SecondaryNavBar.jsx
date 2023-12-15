@@ -7,8 +7,19 @@ import ModalNewRace from './ModalNewRace';
 import ModalNewEvent from './ModalNewEvent';
 import ModalLinkRaceEvent from './ModalLinkRaceEvent';
 
+  const fetchData = () => {
+    let serverQuery = `http://localhost:8000/api/role`;
+    axios
+      .post(serverQuery, token)
 
-export default function SecondaryNavBar(props) {
+      .then((response) => {
+        setRoles(response.data.role);
+        checkAuthorization(response.data.role);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState({ token: localStorage.getItem("token") });
@@ -69,5 +80,3 @@ export default function SecondaryNavBar(props) {
             </Segment>
     );
 }
-
-
