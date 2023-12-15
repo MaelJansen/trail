@@ -268,11 +268,11 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['POST'])]
+    #[Route('/event/edit', name: 'app_event_edit', methods: ['POST'])]
     public function editEvent(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
-        $id = $request->get('id');
+        $id = $data['id'];
         $repository = $entityManager->getRepository(Event::class);
         $event = $repository->findOneBy(['id' => $id]);
         $event->setName($data['name']);
@@ -287,11 +287,11 @@ class ApiController extends AbstractController
         ]);
     }
 
-    #[Route('/event/delete/{id}', name: 'app_event_delete', methods: ['POST'])]
+    #[Route('/event/delete', name: 'app_event_delete', methods: ['POST'])]
     public function deleteEvent(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
-        $id = $request->get('id');
+        $id = $data['id'];
         $repository = $entityManager->getRepository(Event::class);
         $event = $repository->findOneBy(['id' => $id]);
         $entityManager->remove($event);
@@ -411,11 +411,11 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['POST'])]
+    #[Route('/race/edit', name: 'app_race_edit', methods: ['POST'])]
     public function editRace(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
-        $id = $request->get('id');
+        $id = $data['id'];
         $repository = $entityManager->getRepository(Race::class);
         $race = $repository->findOneBy(['id' => $id]);
         $race->setName($data['name']);
@@ -432,11 +432,11 @@ class ApiController extends AbstractController
 
     }
 
-    #[Route('/race/delete/{id}', name: 'app_race_delete', methods: ['POST'])]
+    #[Route('/race/delete', name: 'app_race_delete', methods: ['POST'])]
     public function deleteRace(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
-        $id = $request->get('id');
+        $id = $data['id'];
         $repository = $entityManager->getRepository(Race::class);
         $race = $repository->findOneBy(['id' => $id]);
         $entityManager->remove($race);

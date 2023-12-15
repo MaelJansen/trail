@@ -64,7 +64,7 @@ export default function ModalModifyEvent(props) {
       dispatch({ event: event.type, name: 'onClick', type: 'CLOSE_MODAL' });
 
       // Go to the page of the new event
-      window.location.href = `/event/${response.data.id}`;
+      window.location.reload();
       
     } catch (error) {
       // Handle errors that occur during the API call

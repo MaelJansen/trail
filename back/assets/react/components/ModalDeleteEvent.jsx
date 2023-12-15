@@ -59,7 +59,7 @@ export default function ModalDeleteEvent(props) {
       // Close the modal window after successful submission
       dispatch({ event: event.type, name: 'onClick', type: 'CLOSE_MODAL' });
 
-      window.location.reload();
+      window.location.href = `/events`;
       
     } catch (error) {
       // Handle errors that occur during the API call
