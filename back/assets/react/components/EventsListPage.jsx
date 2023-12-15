@@ -9,7 +9,7 @@ import SecondaryNavBar from './SecondaryNavBar';
 export default function EventsListPage() {
     return (<>
             <Header />
-            <SecondaryNavBar />
+            <SecondaryNavBar title="Liste des évènements"/>
             <EventsList />
             <Footer />
             </>

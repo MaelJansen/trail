@@ -16,8 +16,8 @@ export default function Race(props) {
                             </Grid.Row>
                             <Grid.Row >
                                 <Label.Group>
-                                    <Label>2020</Label>
-                                    <Label>{race.Address}</Label>
+                                    <Label><Icon name='calendar'/>2020</Label>
+                                    <Label><Icon name='marker'/>{race.Address}</Label>
                                 </Label.Group>
                             </Grid.Row>
                         </Grid.Column>

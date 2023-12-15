@@ -8,7 +8,7 @@ import RaceDetails from './RaceDetails';
 export default function RaceDetailsPage() {
     return (<>
             <Header />
-            <SecondaryNavBar />
+            <SecondaryNavBar title="Détails de la course"/>
             <RaceDetails />
             <Footer />
             </>

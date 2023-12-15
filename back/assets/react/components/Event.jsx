@@ -20,18 +20,20 @@ export default function Event(props) {
         <Container style={{ marginTop: '5em', marginBottom: '5em' }}>
             {Array.isArray(events) && events.map((event, index) => (
                 <div key={index}>
-                        <Accordion styled fluid style={{ marginBottom: '2em' }}>
+                        <Accordion styled fluid style={{ marginBottom: '2em'}}>
                             <Accordion.Title
                                 active={activeIndex === index}
                                 index={event.id-1}
                                 onClick={handleClick}
                             >
                                 <Header as='h1'><Link to={`/event/${event.id}`}>{event.Name}</Link></Header>
+                                <Label as='a' color='orange' icon='users' ribbon='right'></Label>
                                 <Label.Group size='large'>
-                                    <Label>{event.StartDate}</Label>
-                                    <Label>{event.EndDate}</Label>
-                                    <Label>{event.Address}</Label>
+                                    <Label><Icon name='calendar'/>{event.StartDate} - {event.EndDate}</Label>
+                                    <Label><Icon name='marker'/>{event.Address}</Label>
+                                    
                                 </Label.Group>
+                                
 
                                 <Icon name='dropdown' />
                             </Accordion.Title>
