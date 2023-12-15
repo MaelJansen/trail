@@ -37,6 +37,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 
+
 #[Route('/api', name: 'app_api')]
 class ApiController extends AbstractController
 {   
@@ -176,11 +177,14 @@ class ApiController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $event = new Event;
-
         $event->setName($data['name']);
         $event->setAddress($data['address']);
         $event->setStartDate(new \DateTime($data['startDate']));
         $event->setEndDate(new \DateTime($data['endDate']));
+        $repository = $entityManager->getRepository(User::class);
+        $user = $repository->getUserByToken($data['token']);
+        $event->setOwner($user);
+        $user->addOwnedEvent($event);
 
         // Validate the form data
         $errors = $validator->validate($event);
@@ -223,21 +227,19 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['POST'])]
     public function editEvent(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+        $data = json_decode($request->getContent(), true);
+        $event->setName($data['name']);
+        $event->setAddress($data['address']);
+        $event->setStartDate(new \DateTime($data['startDate']));
+        $event->setEndDate(new \DateTime($data['endDate']));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+        $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('event/edit.html.twig', [
-            'event' => $event,
-            'form' => $form,
+        return $this->json([
+            'message' => 'Event updated successfully',
         ]);
     }
 
@@ -302,18 +304,11 @@ class ApiController extends AbstractController
         ]);
     }
 
+
     #[Route('/race/new', name: 'app_race_new', methods: ['POST'])]
     public function newRace(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
-        /*
-        // Vérifiez si l'utilisateur est connecté
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // Vérifiez si l'utilisateur est un administrateur
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        */
-        
         $data = json_decode($request->getContent(), true);
         $race = new Race;
         $race->setName($data['name']);
@@ -368,22 +363,22 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['GET', 'POST'])]
+    #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['POST'])]
     public function editRace(Request $request, Race $race, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(RaceType::class, $race);
-        $form->handleRequest($request);
+        $data = json_decode($request->getContent(), true);
+        $race->setName($data['name']);
+        $race->setAddress($data['address']);
+        $race->setDistance($data['distance']);
+        $race->setPositiveDifference($data['positiveHeightDifference']);
+        $race->setNegativeDifference($data['negativeHeightDifference']);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('race/edit.html.twig', [
-            'race' => $race,
-            'form' => $form,
+        $entityManager->flush();
+        
+        return $this->json([
+            'message' => 'Event updated successfully',
         ]);
+
     }
 
     #[Route('/race/delete/{id}', name: 'app_race_delete', methods: ['POST'])]
