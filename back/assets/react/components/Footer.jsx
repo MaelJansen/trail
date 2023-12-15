@@ -26,7 +26,7 @@ const Footer = () => (
             </List>
           </Grid.Column>
         </Grid>
-        <div style={{paddingTop:'0.5em'}}>
+        <div>
             <a href='https://www.facebook.com/iutdebordeaux'><Icon name='facebook' size='big' color='blue' /></a>
             <a href='https://twitter.com/IUT_de_Bordeaux'><Icon name='twitter' size='big' color='blue' /></a>
             <a href='https://www.youtube.com/channel/UCaWP9UzIsK3H9NKx9AruRdA'><Icon name='youtube' size='big' color='red' /></a>

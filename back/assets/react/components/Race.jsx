@@ -12,7 +12,7 @@ export default function Race(props) {
                     <Grid columns={2}>
                         <Grid.Column>
                             <Grid.Row>
-                                <List.Header as='h3'><Link to={`/race/${race.id}`}>{race.Name}</Link></List.Header>
+                                <List.Header as='h3'><Link to={`/race/${race.id}`}><Icon name='flag checkered'/>{race.Name}</Link></List.Header>
                             </Grid.Row>
                             <Grid.Row >
                                 <Label.Group>
@@ -22,10 +22,10 @@ export default function Race(props) {
                             </Grid.Row>
                         </Grid.Column>
                         <Grid.Column textAlign='center'>
-                            <Grid.Row verticalAlign='middle'>
-                                <Statistic margin='1em 0' size='mini' label='Distance' value={`${race.Distance} km`} />
-                                <Statistic size='mini' label='Dénivelé Positif' value={`${race.PositiveDifference} m`} />
-                                <Statistic size='mini' label='Dénivelé Négatif' value={`${race.NegativeDifference} m`} />
+                            <Grid.Row verticalAlign='middle' >
+                                <Statistic style={{marginBottom: '0', marginTop: '0.5em'}} size='mini' label='Distance' value={`${race.Distance} km`} />
+                                <Statistic style={{marginBottom: '0', marginTop: '0.5em'}} size='mini' label='Dénivelé Positif' value={`${race.PositiveDifference} m`} />
+                                <Statistic style={{marginBottom: '0', marginTop: '0.5em'}} size='mini' label='Dénivelé Négatif' value={`${race.NegativeDifference} m`} />
                             </Grid.Row>
                         </Grid.Column>
                     </Grid>
