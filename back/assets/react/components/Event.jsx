@@ -17,7 +17,7 @@ export default function Event(props) {
     }
 
     return (
-        <Container style={{ marginTop: '5em', marginBottom: '5em' }}>
+        <Container style={{ marginTop: '1em', marginBottom: '1em' }}>
             {Array.isArray(events) && events.map((event, index) => (
                 <div key={index}>
                         <Accordion styled fluid style={{ marginBottom: '2em'}}>
