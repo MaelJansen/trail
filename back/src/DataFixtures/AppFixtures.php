@@ -12,9 +12,9 @@ use DateTime;
 
 class AppFixtures extends Fixture
 {
-    public $NB_USERS = 10;
-    public $NB_EVENTS = 20;
-    public $NB_RACES = 20;
+    public $NB_USERS = 50;
+    public $NB_EVENTS = 50;
+    public $NB_RACES = 50;
     public function load(ObjectManager $manager): void
     {
         $roles = ['ROLE_USER', 'ROLE_ORGANIZER', 'ROLE_ADMIN'];
@@ -36,6 +36,8 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < $this->NB_EVENTS; $i++) {
             $date = new DateTime('now');
             $datef = $date->modify('+' . rand(1, 7) . ' days');
+            print_r($date);
+            print_r($datef);
             $event = (new Event())
                 ->setName('event' . $i)
                 ->setStartDate($date)
