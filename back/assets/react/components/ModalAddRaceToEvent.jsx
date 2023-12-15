@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Form, Dropdown } from 'semantic-ui-react'
+import { Button, Modal, Form, Dropdown, Icon } from 'semantic-ui-react'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
@@ -108,7 +108,7 @@ export default function ModalAddRaceToEvent(props) {
         dispatch({ event: e.type, name: 'onClose', type: 'CLOSE_MODAL' })
       }
       open={open}
-      trigger={<Button icon='linkify' style={{ backgroundColor: 'white', color: 'black' }} content='Lien'></Button>}
+      trigger={<Button color='green' ><Icon name='linkify'/>Lier une course</Button>}
     >
       <Modal.Header>Ajouter une course à l'évènement "{props.eventName}"</Modal.Header>
       <Modal.Content>
