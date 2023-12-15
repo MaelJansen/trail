@@ -74,9 +74,9 @@ class Event
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStartDate(): ?string
     {
-        return $this->StartDate;
+        return $this->StartDate->format('d-m-Y');
     }
 
     public function setStartDate(\DateTimeInterface $StartDate): static
@@ -86,9 +86,9 @@ class Event
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?string
     {
-        return $this->EndDate;
+        return $this->EndDate->format('d-m-Y');
     }
 
     public function setEndDate(\DateTimeInterface $EndDate): static
