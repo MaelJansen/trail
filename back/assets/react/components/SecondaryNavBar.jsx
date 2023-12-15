@@ -1,39 +1,89 @@
-import React from 'react';
-import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List, Grid, Menu, Label, Header, Button, Modal, Segment, Form } from 'semantic-ui-react';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import ModalNewRace from './ModalNewRace';
-import ModalNewEvent from './ModalNewEvent';
+import React from "react";
+import "semantic-ui-css/semantic.min.css";
+import {
+  Accordion,
+  Container,
+  List,
+  Grid,
+  Menu,
+  Label,
+  Header,
+  Button,
+  Modal,
+  Segment,
+  Form,
+} from "semantic-ui-react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import ModalNewRace from "./ModalNewRace";
+import ModalNewEvent from "./ModalNewEvent";
+import axios from "axios";
 
+export default function SecondaryNavBar() {
+  const [roles, setRoles] = useState([]);
+  const [token, setToken] = useState({ token: localStorage.getItem("token") });
+  const [auto, setAuto] = useState(false);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
 
+  const fetchData = () => {
+    let serverQuery = `http://localhost:8000/api/role`;
+    axios
+      .post(serverQuery, token)
 
-export default function SecondaryNavBar(props) {
+      .then((response) => {
+        setRoles(response.data.role);
+        checkAuthorization(response.data.role);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    return (
-        <Segment color='yellow' inverted style={{marginTop: '3em'}}>
-                <Grid columns={3} relaxed='very'>
-                    <Grid.Column>
-                        <Header style={{margin: '0'}} as='h2' color='black' inverted textAlign='center'>
-                             {props.title}
-                        </Header>
-                    </Grid.Column>
-                    <Grid.Column textAlign='center'>
-                        <Button.Group>
-                            <Button icon='list' href='/events' active inverted color='orange'>Liste</Button>
-                            <Button icon='map outline' style={{ backgroundColor: 'white', color: 'black' }}>Carte</Button>
-                        </Button.Group>
-                    </Grid.Column>
-                    <Grid.Column textAlign='center'>
-                        <ModalNewRace />
-                        <Button icon='linkify' content='Link' style={{ backgroundColor: 'white', color: 'black' }}></Button>
-                        <ModalNewEvent />
+  const checkAuthorization = (data) => {
+    data.forEach((element) => {
+      console.log(element);
+      if (element == "ROLE_ADMIN" || element == "ROLE_ORGANIZER") {
+        setAuto(true);
+      }
+    });
+  };
 
-                    </Grid.Column>
-                </Grid>
-            </Segment>
-    );
+  return (
+    <Segment color="yellow" inverted style={{ marginTop: "3em" }}>
+      <Grid columns={3} relaxed="very">
+        <Grid.Column>
+          <Header as="h2" color="black" inverted textAlign="center">
+            Events
+          </Header>
+        </Grid.Column>
+        <Grid.Column textAlign="center">
+          <Button.Group>
+            <Button active attached="left" inverted color="orange">
+              List
+            </Button>
+            <Button
+              attached="right"
+              style={{ backgroundColor: "white", color: "black" }}
+            >
+              Map
+            </Button>
+          </Button.Group>
+        </Grid.Column>
+        {auto && (
+          <Grid.Column textAlign="center">
+            <ModalNewRace />
+            <Button
+              icon="linkify"
+              content="Link"
+              style={{ backgroundColor: "white", color: "black" }}
+            ></Button>
+            <ModalNewEvent />
+          </Grid.Column>
+        )}
+      </Grid>
+    </Segment>
+  );
 }
-
-
