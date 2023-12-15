@@ -36,8 +36,8 @@ export default function NavBar() {
                                     {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
                                         <Button basic onClick={logout}>Logout</Button>
                                         :
-                                        <Link to="/connexion" style={{ textDecoration: 'none', color: 'black' }}>Connexion</Link>
-                                    }<Icon name='user' style={{marginLeft: '0.5em'}}/></Dropdown.Item>
+                                        <Link to="/connexion" style={{ textDecoration: 'none', color: 'black' }}>Connexion <Icon name='user' style={{marginLeft: '1em'}}/></Link>
+                                    }</Dropdown.Item>
 
                             </Dropdown.Menu>
                         </Dropdown>
