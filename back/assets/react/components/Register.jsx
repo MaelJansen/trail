@@ -2,7 +2,8 @@ import React, { useState } from "react"
 import { redirect, useAsyncError, useNavigate } from "react-router-dom"
 import "semantic-ui-css/semantic.min.css"
 import { Button, Form, Grid, Header, Image, Segment } from "semantic-ui-react"
-import  { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+import NavBar from "./NavBar"
 
 const LoginForm = () => {
   const [email, setEmail] = useState("")
@@ -28,8 +29,8 @@ const LoginForm = () => {
   return (
     <Grid textAlign="center" style={{ height: "90vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="teal" textAlign="center">
-          Log-in to your account
+        <Header as="h2" color="orange" textAlign="center">
+          Créer un compte
         </Header>
         <Form size="large" onSubmit={handleSubmit}>
           <Segment stacked>
@@ -37,14 +38,14 @@ const LoginForm = () => {
               fluid
               icon="user"
               iconPosition="left"
-              placeholder="Firstname"
+              placeholder="Prénom"
               onChange={(event) => setFirstname(event.target.value)}
             />
             <Form.Input
               fluid
               icon="user"
               iconPosition="left"
-              placeholder="Lastname"
+              placeholder="Nom"
               onChange={(event) => setLastname(event.target.value)}
             />
             <Form.Input
@@ -52,21 +53,23 @@ const LoginForm = () => {
               type="email"
               icon="mail"
               iconPosition="left"
-              placeholder="Mail"
+              placeholder="Email"
               onChange={(event) => setEmail(event.target.value)}
             />
             <Form.Input
               fluid
               icon="lock"
               iconPosition="left"
-              placeholder="Password"
+              placeholder="Mot de passe"
               type="password"
               onChange={(event) => setPassword(event.target.value)}
             />
-            <Button color="teal" fluid size="large" type="submit">
-              Login
-            </Button>
           </Segment>
+          <Button color="yellow" fluid size="large" type="submit">
+          Créer
+          </Button>
+          <p style={{marginTop:'1em'}}>Déjà un compte?</p>
+        <a href="login">Connectez-vous!</a>
         </Form>
       </Grid.Column>
     </Grid>
