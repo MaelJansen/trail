@@ -162,23 +162,6 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
-    #[Route('/eventsCond', name: "iterate_event_cond", methods: ['GET'])]
-    public function iterateEventsCond(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
-    {
-        $queryBuilder = $entityManager->createQueryBuilder()
-            ->select('e')
-            ->from(Event::class, 'e')
-            ->orderBy('e.id', 'ASC');
-
-        $events = $queryBuilder->getQuery()->getResult();
-
-        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
-
-        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'Name']]);
-
-        return $this->json($jsonContent);
-    }
-
     #[Route('/event/new', name: 'app_event_new', methods: ['POST'])]
     public function newEvent(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
@@ -266,21 +249,6 @@ class ApiController extends AbstractController
         return $this->render('race/index.html.twig', [
             'races' => $raceRepository->findAll(),
         ]);
-    }
-
-    #[Route('/racesCond', name: "iterate_race_cond", methods: ['GET'])]
-    public function iterateRacesCond(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
-    {
-        $queryBuilder = $entityManager->createQueryBuilder()
-            ->select('r')
-            ->from(Race::class, 'r')
-            ->orderBy('r.id', 'ASC');
-
-        $races = $queryBuilder->getQuery()->getResult();
-
-        $jsonContent = $serializer->normalize($races, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'Name']]);
-
-        return $this->json($jsonContent);
     }
 
     #[Route('/racesCond', name: "iterate_race_cond", methods: ['GET'])]
