@@ -62,7 +62,8 @@ export default function ModalNewEvent() {
       // Close the modal after successful submission
       dispatch({ event: event.type, name: 'onClick', type: 'CLOSE_MODAL' });
 
-      window.location.reload();
+      // I wanna go to the new event page
+      window.location.href = `/event/${response.data.id}`;
       
     } catch (error) {
       // Handle any errors that occur during the API call
