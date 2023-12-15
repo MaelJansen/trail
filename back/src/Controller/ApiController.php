@@ -108,17 +108,30 @@ class ApiController extends AbstractController
     #[Route('/events', name: "iterate_event", methods: ['GET'])]
     public function iterateEvents(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
+        $page = $request->query->getInt('page', 1); // Get the current page number from the request query parameters
+        $limit = 10; // Set the maximum number of results per page to 10
+        $startIndex = ($page - 1) * $limit; // Calculate the offset
+
         $queryBuilder = $entityManager->createQueryBuilder()
             ->select('e')
             ->from(Event::class, 'e')
             ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10);
+            ->setFirstResult($startIndex) // Calculate the offset based on the current page and limit
+            ->setMaxResults($limit); // Set the maximum number of results to fetch
 
         $events = $queryBuilder->getQuery()->getResult();
 
+        $queryBuilder = $entityManager->createQueryBuilder()
+        ->select('COUNT(e) as total')
+        ->from(Event::class, 'e')
+        ->orderBy('e.id', 'ASC');
+
+        $nbPages = $queryBuilder->getQuery()->getSingleScalarResult();
+
         $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
 
-        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
+        $jsonContent['events'] = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
+        $jsonContent['nbPages'] = ceil($nbPages/$limit); // Add nbPages to the JSON response
 
         return $this->json($jsonContent);
     }
