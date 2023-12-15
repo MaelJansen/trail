@@ -9,20 +9,20 @@ import ModalNewEvent from './ModalNewEvent';
 
 
 
-export default function SecondaryNavBar() {
+export default function SecondaryNavBar(props) {
 
     return (
         <Segment color='yellow' inverted style={{marginTop: '3em'}}>
                 <Grid columns={3} relaxed='very'>
                     <Grid.Column>
-                        <Header as='h2' color='black' inverted textAlign='center'>
-                            Events
+                        <Header style={{margin: '0'}} as='h2' color='black' inverted textAlign='center'>
+                             {props.title}
                         </Header>
                     </Grid.Column>
                     <Grid.Column textAlign='center'>
                         <Button.Group>
-                            <Button active attached='left' inverted color='orange'>List</Button>
-                            <Button attached='right' style={{ backgroundColor: 'white', color: 'black' }}>Map</Button>
+                            <Button icon='list' href='/events' active inverted color='orange'>Liste</Button>
+                            <Button icon='map outline' style={{ backgroundColor: 'white', color: 'black' }}>Carte</Button>
                         </Button.Group>
                     </Grid.Column>
                     <Grid.Column textAlign='center'>

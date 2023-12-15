@@ -229,8 +229,8 @@ class ApiController extends AbstractController
         $race->setName($data['name']);
         $race->setAddress($data['address']);
         $race->setDistance($data['distance']);
-        $race->setPositiveDifference($data['positiveDifference']);
-        $race->setNegativeDifference($data['negativeDifference']);   
+        $race->setPositiveDifference($data['positiveHeightDifference']);
+        $race->setNegativeDifference($data['negativeHeightDifference']);   
 
         // Validate the form data
         $errors = $validator->validate($race);

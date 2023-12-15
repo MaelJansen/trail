@@ -60,6 +60,7 @@ const LoginForm = () => {
               id="email"
               value={inputs.email}
               onChange={handleChange}
+              placeholder="Email"
               required
             />
             <Form.Input
