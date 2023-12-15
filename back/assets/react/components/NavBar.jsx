@@ -37,6 +37,11 @@ export default function NavBar() {
                         <Dropdown trigger={<Icon name='bars' />} icon={null}>
                             <Dropdown.Menu>
                                 <Dropdown.Item><Link to="/events" style={{ textDecoration: 'none', color: 'black' }}>Accueil</Link></Dropdown.Item>
+                                    {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
+                                        <Dropdown.Item><Link to="/myevents" style={{ textDecoration: 'none', color: 'black' }}>Mes évènements</Link> </Dropdown.Item>
+                                        :
+                                        <></>
+                                    }                         
                                 <Dropdown.Item>
                                     {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
                                         <Button basic onClick={logout}>Logout</Button>
