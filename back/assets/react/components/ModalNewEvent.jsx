@@ -50,6 +50,7 @@ export default function ModalNewEvent() {
       // Make a POST request to the API endpoint
       const response = await axios.post('http://localhost:8000/api/event/new', {
         // Pass the form data as the payload of the request
+        token: localStorage.getItem('token'),
         name: event.target.name.value,
         startDate: event.target.startDate.value,
         endDate: event.target.endDate.value,

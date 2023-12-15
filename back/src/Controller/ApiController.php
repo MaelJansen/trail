@@ -147,6 +147,47 @@ class ApiController extends AbstractController
         return $this->json($jsonContent);
     }
 
+    #[Route('/myEvents', name: "iterate_my_event", methods: ['GET'])]
+    public function iterateMyEvents(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
+    {
+        $token = $request->query->get('token');
+        $page = $request->query->getInt('page', 1); // Get the current page number from the request query parameters
+        $limit = 10; // Set the maximum number of results per page to 10
+        $startIndex = ($page - 1) * $limit; // Calculate the offset
+        $repository = $entityManager->getRepository(User::class);
+        $user = $repository->getUserByToken($token);
+
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('e')
+            ->from(Event::class, 'e')
+            ->orderBy('e.id', 'ASC')
+            ->setFirstResult($startIndex) // Calculate the offset based on the current page and limit
+            ->setMaxResults($limit) // Set the maximum number of results to fetch
+            ->where('e.Owner = :user')
+            ->setParameter('user', $user);
+
+        $events = $queryBuilder->getQuery()->getResult();
+
+        $queryBuilder = $entityManager->createQueryBuilder()
+        ->select('COUNT(e) as total')
+        ->from(Event::class, 'e')
+        ->orderBy('e.id', 'ASC')
+        ->where('e.Owner = :user')
+        ->setParameter('user', $user);
+
+        $nbPages = $queryBuilder->getQuery()->getSingleScalarResult();
+
+        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
+
+        $jsonContent['events'] = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
+        $jsonContent['nbPages'] = ceil($nbPages/$limit); // Add nbPages to the JSON response
+
+
+        return $this->json($jsonContent);
+
+    }
+        
+
     #[Route('/eventsCond', name: "iterate_event_cond", methods: ['GET'])]
     public function iterateEventsCond(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
@@ -228,9 +269,12 @@ class ApiController extends AbstractController
     }
 
     #[Route('/event/edit/{id}', name: 'app_event_edit', methods: ['POST'])]
-    public function editEvent(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    public function editEvent(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Event::class);
+        $event = $repository->findOneBy(['id' => $id]);
         $event->setName($data['name']);
         $event->setAddress($data['address']);
         $event->setStartDate(new \DateTime($data['startDate']));
@@ -244,14 +288,18 @@ class ApiController extends AbstractController
     }
 
     #[Route('/event/delete/{id}', name: 'app_event_delete', methods: ['POST'])]
-    public function deleteEvent(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    public function deleteEvent(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($event);
-            $entityManager->flush();
-        }
+        $data = json_decode($request->getContent(), true);
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Event::class);
+        $event = $repository->findOneBy(['id' => $id]);
+        $entityManager->remove($event);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        return $this->json([
+            'message' => 'Event deleted successfully',
+        ]);
     }
 
     #[Route('/race', name: 'app_race_index', methods: ['GET'])]
@@ -364,9 +412,12 @@ class ApiController extends AbstractController
     }
 
     #[Route('/race/edit/{id}', name: 'app_race_edit', methods: ['POST'])]
-    public function editRace(Request $request, Race $race, EntityManagerInterface $entityManager): Response
+    public function editRace(Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Race::class);
+        $race = $repository->findOneBy(['id' => $id]);
         $race->setName($data['name']);
         $race->setAddress($data['address']);
         $race->setDistance($data['distance']);
@@ -376,20 +427,25 @@ class ApiController extends AbstractController
         $entityManager->flush();
         
         return $this->json([
-            'message' => 'Event updated successfully',
+            'message' => 'Race updated successfully',
         ]);
 
     }
 
     #[Route('/race/delete/{id}', name: 'app_race_delete', methods: ['POST'])]
-    public function deleteRace(Request $request, Race $race, EntityManagerInterface $entityManager): Response
+    public function deleteRace(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$race->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($race);
-            $entityManager->flush();
-        }
+        $data = json_decode($request->getContent(), true);
+        $id = $request->get('id');
+        $repository = $entityManager->getRepository(Race::class);
+        $race = $repository->findOneBy(['id' => $id]);
+        $entityManager->remove($race);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
+        return $this->json([
+            'message' => 'Race deleted successfully',
+        ]);
+
     }
 
     #[Route('/role', name: 'app_role', methods: ['POST'])]

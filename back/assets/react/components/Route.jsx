@@ -14,6 +14,7 @@ import {
     createBrowserRouter,
     RouterProvider,
   } from "react-router-dom";
+import MyEventsPage from './MyEventsPage';
 
   export default function (props) {
     const router = createBrowserRouter([
@@ -39,6 +40,12 @@ import {
         {
           path: "/event/:eventId",
           element:<EventDetailsPage />,
+          errorElement: <ErrorPage />
+        },
+
+        {
+          path: "/myevents",
+          element:<MyEventsPage />,
           errorElement: <ErrorPage />
         },
 

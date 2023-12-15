@@ -50,6 +50,7 @@ export default function ModalNewRace() {
       // Make a POST request to the API endpoint
       const response = await axios.post('http://localhost:8000/api/race/new', {
         // Pass the form data as the request payload
+        token: localStorage.getItem('token'),
         name: event.target.name.value,
         address: event.target.address.value,
         distance: event.target.distance.value,

@@ -18,6 +18,11 @@ export default function NavBar() {
             <Container textAlign='left'>
                 <Menu.Item color='orange'>MounTrail</Menu.Item>
                 <Menu.Menu position='right'>
+                    {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
+                        <Menu.Item><Link to="/myevents" style={{ textDecoration: 'none', color: 'black' }}>Mes évènements</Link></Menu.Item>
+                        :
+                        <></>
+                    }
                     <Menu.Item><Link to="/events" style={{ textDecoration: 'none', color: 'black' }}>Accueil</Link></Menu.Item>
                     <Menu.Item>
                         {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
