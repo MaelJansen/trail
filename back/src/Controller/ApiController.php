@@ -133,7 +133,7 @@ class ApiController extends AbstractController
 
         $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
 
-        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name']]);
+        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'Name']]);
 
         return $this->json($jsonContent);
     }
@@ -246,41 +246,46 @@ class ApiController extends AbstractController
         ]);
     }
 
-    #[Route('/raceCond', name: "iterate_race_cond", methods: ['GET'])]
+    #[Route('/racesCond', name: "iterate_race_cond", methods: ['GET'])]
     public function iterateRacesCond(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
         $queryBuilder = $entityManager->createQueryBuilder()
-            ->select('e')
-            ->from(Race::class, 'e')
-            ->orderBy('e.id', 'ASC');
+            ->select('r')
+            ->from(Race::class, 'r')
+            ->orderBy('r.id', 'ASC');
 
-        $events = $queryBuilder->getQuery()->getResult();
+        $races = $queryBuilder->getQuery()->getResult();
 
-        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name']]);
+        $jsonContent = $serializer->normalize($races, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'Name']]);
 
         return $this->json($jsonContent);
     }
 
-    #[Route('/link', name: 'app_link_event_race', methods: ['GET', 'POST'])]
+    #[Route('/link', name: 'app_link_event_race', methods: ['POST'])]
     public function createLink(Request $request, EntityManagerInterface $entityManager, RaceRepository $raceRepository, EventRepository $eventRepository): Response
     {
         $data = json_decode($request->getContent(), true);
         $eventName = $data['event'];
         $raceName = $data['race'];
 
-        if ($race === null){
+        if ($data['race'] === null || $data['event'] === null) {
             return $this->json([
                 'message' => 'missing credentials'
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $race = $raceRepositoryt->getOneRace($raceName);
+        $race = $raceRepository->getOneRace($raceName);
         $event = $eventRepository->getOneEvent($eventName);
+
 
         $race->setEvent($event);
         $event->addRace($race);
 
         $entityManager->flush();
+
+        return $this->json([
+            'message' => 'Link created successfully',
+        ]);
     }
 
     #[Route('/race/new', name: 'app_race_new', methods: ['GET', 'POST'])]

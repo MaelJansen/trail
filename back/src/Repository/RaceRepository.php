@@ -24,7 +24,7 @@ class RaceRepository extends ServiceEntityRepository
     public function getOneRace(string $name): ?Race
     {
         $race = $this->createQueryBuilder('r')
-            ->andWhere('r.name = :val')
+            ->andWhere('r.Name = :val')
             ->setParameter('val', $name)
             ->setMaxResults(1)
             ->getQuery()

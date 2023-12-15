@@ -24,7 +24,7 @@ class EventRepository extends ServiceEntityRepository
     public function getOneEvent(string $name): ?Event
     {
         $event = $this->createQueryBuilder('e')
-            ->andWhere('e.name = :val')
+            ->andWhere('e.Name = :val')
             ->setParameter('val', $name)
             ->setMaxResults(1)
             ->getQuery()
