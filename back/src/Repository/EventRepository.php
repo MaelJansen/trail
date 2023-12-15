@@ -21,11 +21,11 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-    public function getOneEvent(string $name): ?Event
+    public function getOneEvent(string $id): ?Event
     {
         $event = $this->createQueryBuilder('e')
-            ->andWhere('e.Name = :val')
-            ->setParameter('val', $name)
+            ->andWhere('e.id = :val')
+            ->setParameter('val', $id)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

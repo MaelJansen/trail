@@ -265,8 +265,8 @@ class ApiController extends AbstractController
     public function createLink(Request $request, EntityManagerInterface $entityManager, RaceRepository $raceRepository, EventRepository $eventRepository): Response
     {
         $data = json_decode($request->getContent(), true);
-        $eventName = $data['event'];
-        $raceName = $data['race'];
+        $eventId = $data['event'];
+        $raceId = $data['race'];
 
         if ($data['race'] === null || $data['event'] === null) {
             return $this->json([
@@ -274,8 +274,8 @@ class ApiController extends AbstractController
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $race = $raceRepository->getOneRace($raceName);
-        $event = $eventRepository->getOneEvent($eventName);
+        $race = $raceRepository->getOneRace($raceId);
+        $event = $eventRepository->getOneEvent($eventId);
 
 
         $race->setEvent($event);

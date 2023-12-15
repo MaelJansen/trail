@@ -21,11 +21,11 @@ class RaceRepository extends ServiceEntityRepository
         parent::__construct($registry, Race::class);
     }
 
-    public function getOneRace(string $name): ?Race
+    public function getOneRace(string $id): ?Race
     {
         $race = $this->createQueryBuilder('r')
-            ->andWhere('r.Name = :val')
-            ->setParameter('val', $name)
+            ->andWhere('r.id = :val')
+            ->setParameter('val', $id)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

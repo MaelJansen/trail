@@ -55,14 +55,15 @@ export default function ModalLinkRaceEvent() {
   const { log, open } = state
 
 
-  const handleSubmit = async() => {
+  const handleSubmit = async(e) => {
+    e.preventDefault();
     if (selectedEvent && selectedRace) {
        try {
         // Make a POST request to the API endpoint
         const response = await axios.post('http://localhost:8000/api/link', {
           // Pass the form data as the request payload
-          event: selectedEvent.text,
-          race: selectedRace.text
+          event: selectedEvent,
+          race: selectedRace,
         });
 
         console.log(response.data);
@@ -74,7 +75,10 @@ export default function ModalLinkRaceEvent() {
 
         console.log(error);
       }
-    } // Add this closing brace
+    } 
+    else {
+      console.log('Please fill all the fields')
+    }
 
   }
 
@@ -142,6 +146,7 @@ export default function ModalLinkRaceEvent() {
               {eventList &&
                 <Dropdown
                   placeholder='Event'
+                  name = 'event'
                   fluid
                   search
                   selection
@@ -155,6 +160,7 @@ export default function ModalLinkRaceEvent() {
               {raceList &&
                 <Dropdown
                   placeholder='Race'
+                  name = 'race'
                   fluid
                   search
                   selection
