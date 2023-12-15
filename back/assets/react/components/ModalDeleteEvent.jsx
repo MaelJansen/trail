@@ -80,14 +80,18 @@ export default function ModalDeleteEvent(props) {
     >
       <Modal.Header>Supprimer</Modal.Header>
       <Modal.Content>
-        
+        <Modal.Description>
+          <p>
+            Êtes-vous sûr de vouloir supprimer cet événement ?
+          </p>
+        </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
       <Button
           onClick={(e) =>
             handleDelete(e)
           }
-          neutral
+          positive
         >
           Supprimer
         </Button>

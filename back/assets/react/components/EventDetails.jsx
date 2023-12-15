@@ -7,6 +7,7 @@ import Race from './Race';
 import ModalLinkRaceEvent from './ModalLinkRaceEvent';
 import ModalDeleteEvent from './ModalDeleteEvent';
 import ModalModifyEvent from "./ModalModifyEvent";
+import ModalAddRaceToEvent from "./ModalAddRaceToEvent";
 
 
 
@@ -104,7 +105,7 @@ export default function EventDetails() {
                     </Accordion.Title>
                     <Accordion.Content active={true}>
                         <Race races={event.Race} />
-                        {auto && (<ModalLinkRaceEvent eventId={eventId}/>)}
+                        {auto && (<ModalAddRaceToEvent eventId={eventId} eventName={event.Name}/>)}
                     </Accordion.Content>
                 </Accordion>
             </div>
