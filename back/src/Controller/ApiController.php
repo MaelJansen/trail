@@ -23,10 +23,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Form\RegistrationFormType;
 use App\Security\UserAuthenticator;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -42,43 +41,58 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ApiController extends AbstractController
 {   
     #[Route('/login', name: 'app_api_login', methods: ['POST'])]
-    public function login(Request $request, UserRepository $repository, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function login(Request $request, UserRepository $repository): Response
     {
         $data = json_decode($request->getContent(), true);
-        $user = $repository->getOneUser($data['email']);
-        $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                $data['password']
-            )
-        );
-        $allUsers = $repository->findAll();
-        $exist = FALSE;
-        foreach ($allUsers as $userTest){
-            if($data['email'] === $userTest->getEmail() && $user->getPassword() === $userTest->getPassword()){
-                $exist = True;
-            }
-        }
-        if (!$exist) {
+        $requestPassword = $data['password'];
+        $requestUser = $data['email'];
+        $user = $repository->getOneUser($requestUser);
+
+        if (!$user || !$requestPassword ||!$requestUser) {
             return $this->json([
                 'message' => 'missing credentials',
                 'user' => $user
             ], Response::HTTP_UNAUTHORIZED);
         }
-        $token = uniqid();
-        $user->setToken($token);
-        $repository->save($user, true);
+        // $user->setPassword(  
+        //     $userPasswordHasher->hashPassword(
+        //         $user,
+        //         $data['password']
+        //     )
+        // );
+     
+        $passwordUser = $user->getPassword();
+        
+        if($passwordUser === hash('sha256', $requestPassword)){
+            $token = uniqid();
+            $user->setToken($token);
+            $repository->save($user, true);
              
+            return $this->json([
+                'user'  => $user->getUserIdentifier(),
+                'userId' => $user->getId(),
+                'token' => $token,
+            ]);
+        }
+
         return $this->json([
-            'user'  => $user->getUserIdentifier(),
-            'userId' => $user->getId(),
-            'token' => $token,
-        ]);
+            'message' => 'wrong password',
+            'user' => $user
+        ], Response::HTTP_UNAUTHORIZED);
+        // $allUsers = $repository->findAll();
+        // $exist = FALSE;
+        // foreach ($allUsers as $userTest){
+        //     if($data['email'] === $userTest->getEmail() && $user->getPassword() === $userTest->getPassword()){
+        //         $exist = True;
+        //     }
+        // }
+        
+        
     }
 
 
     #[Route("/register", name: "_register", methods: ["POST"])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
         $user = new User;
@@ -87,12 +101,7 @@ class ApiController extends AbstractController
         $user->setFirstname($data['Firstname']);
         $user->setLastname($data['Lastname']);
 
-        $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                $data['password']
-            )
-        );
+        $user->setPassword(hash('sha256', $data['password']));
 
         $entityManager->persist($user);
         $entityManager->flush();
