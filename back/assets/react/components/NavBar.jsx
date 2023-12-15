@@ -11,7 +11,7 @@ export default function NavBar() {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();
-        navigate('/connexion');
+        navigate('/login');
     }
     return (
         <Menu fixed='top' color='orange'>
@@ -23,7 +23,7 @@ export default function NavBar() {
                         {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
                             <Button basic onClick={logout}>Logout</Button>
                             :
-                            <Link to="/connexion" style={{ textDecoration: 'none', color: 'black' }}>Connexion</Link>
+                            <Link to="/login" style={{ textDecoration: 'none', color: 'black' }}>Connexion</Link>
                         }
                         <Icon name='user' style={{marginLeft: '0.5em'}}/>
                     </Menu.Item>
@@ -36,7 +36,7 @@ export default function NavBar() {
                                     {localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ?
                                         <Button basic onClick={logout}>Logout</Button>
                                         :
-                                        <Link to="/connexion" style={{ textDecoration: 'none', color: 'black' }}>Connexion <Icon name='user' style={{marginLeft: '1em'}}/></Link>
+                                        <Link to="/login" style={{ textDecoration: 'none', color: 'black' }}>Connexion <Icon name='user' style={{marginLeft: '1em'}}/></Link>
                                     }</Dropdown.Item>
 
                             </Dropdown.Menu>

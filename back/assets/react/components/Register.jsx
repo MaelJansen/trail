@@ -38,14 +38,14 @@ const LoginForm = () => {
               fluid
               icon="user"
               iconPosition="left"
-              placeholder="Firstname"
+              placeholder="Prénom"
               onChange={(event) => setFirstname(event.target.value)}
             />
             <Form.Input
               fluid
               icon="user"
               iconPosition="left"
-              placeholder="Lastname"
+              placeholder="Nom"
               onChange={(event) => setLastname(event.target.value)}
             />
             <Form.Input
@@ -53,23 +53,23 @@ const LoginForm = () => {
               type="email"
               icon="mail"
               iconPosition="left"
-              placeholder="Mail"
+              placeholder="Email"
               onChange={(event) => setEmail(event.target.value)}
             />
             <Form.Input
               fluid
               icon="lock"
               iconPosition="left"
-              placeholder="Password"
+              placeholder="Mot de passe"
               type="password"
               onChange={(event) => setPassword(event.target.value)}
             />
           </Segment>
           <Button color="yellow" fluid size="large" type="submit">
-            Login
+          Créer
           </Button>
-          <p style={{marginTop:'1em'}}>Déjà un compte ?</p>
-        <a href="register">Connectez-vous!</a>
+          <p style={{marginTop:'1em'}}>Déjà un compte?</p>
+        <a href="login">Connectez-vous!</a>
         </Form>
       </Grid.Column>
     </Grid>

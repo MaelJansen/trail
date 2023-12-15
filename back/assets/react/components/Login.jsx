@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
-import { Button, Form, Grid, Segment } from "semantic-ui-react";
+import { Button, Form, Grid, Segment, Header } from "semantic-ui-react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -55,9 +55,15 @@ const LoginForm = () => {
   return (
     <Grid textAlign="center" style={{ height: "90vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
+      <Header as="h2" color="orange" textAlign="center">
+          Connexion
+        </Header>
         <Form size="large" onSubmit={handleSubmit}>
           <Segment stacked>
             <Form.Input
+              fluid
+              icon="mail"
+              iconPosition="left"
               type="email"
               name="email"
               id="email"
@@ -67,6 +73,9 @@ const LoginForm = () => {
               required
             />
             <Form.Input
+              fluid
+              icon="lock"
+              iconPosition="left"
               type="password"
               name="password"
               id="password"
@@ -74,22 +83,21 @@ const LoginForm = () => {
               onChange={handleChange}
               placeholder="Mot de passe"
               required
-            />
+            />{message && (
+              <p style={{ color: "red" }}>
+                Mauvais nom d'utilisateur ou mauvais mot de passse
+              </p>
+            )}
             <Button color="yellow" fluid size="large" type="submit">
-              Login
+              Se connecter
             </Button>
           </Segment>
         </Form>
-        {message && (
-          <p style={{ color: "red" }}>
-            Mauvais nom d'utilisateur ou mauvais mot de passse
-          </p>
-        )}
-        <a href="Register">Pas encore de compte ?</a>
+        <p style={{ marginTop: '1em' }}>Pas encore de compte?</p>
+        <a href="register">Inscrivez-vous!</a>
       </Grid.Column>
     </Grid>
   );
 };
 
 export default LoginForm;
-

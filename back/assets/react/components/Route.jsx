@@ -25,7 +25,7 @@ import {
         },
 
         {
-          path: "/connexion",
+          path: "/login",
           element:<LoginPage />,
           errorElement: <ErrorPage />
         },
