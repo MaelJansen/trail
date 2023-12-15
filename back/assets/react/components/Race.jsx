@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic, Icon, Transition } from 'semantic-ui-react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import "semantic-ui-css/semantic.min.css";
+import {
+  Accordion,
+  Container,
+  List,
+  Header,
+  Segment,
+  Grid,
+  Label,
+  Statistic,
+  Icon,
+  Transition,
+} from "semantic-ui-react";
 
 export default function Race(props) {
     

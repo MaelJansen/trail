@@ -5,11 +5,44 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ModalNewRace from './ModalNewRace';
 import ModalNewEvent from './ModalNewEvent';
-
-
-
+import ModalLinkRaceEvent from './ModalLinkRaceEvent';
+import axios from 'axios';
 
 export default function SecondaryNavBar(props) {
+
+  const fetchData = () => {
+    let serverQuery = `http://localhost:8000/api/role`;
+    axios
+      .post(serverQuery, token)
+
+      .then((response) => {
+        setRoles(response.data.role);
+        checkAuthorization(response.data.role);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+    const [roles, setRoles] = useState([]);
+    const [token, setToken] = useState({ token: localStorage.getItem("token") });
+    const [auto, setAuto] = useState(false);
+  
+    useEffect(() => {
+      fetchData();
+    }, []);
+  
+  
+    const checkAuthorization = (data) => {
+      data.forEach((element) => {
+        console.log(element);
+        if (element == "ROLE_ADMIN" || element == "ROLE_ORGANIZER") {
+          setAuto(true);
+        }
+      });
+    };
+  
+
 
     return (
         <Segment color='yellow' inverted style={{marginTop: '3em'}}>
@@ -25,15 +58,17 @@ export default function SecondaryNavBar(props) {
                             <Button icon='map outline' style={{ backgroundColor: 'white', color: 'black' }}>Carte</Button>
                         </Button.Group>
                     </Grid.Column>
-                    <Grid.Column textAlign='center'>
-                        <ModalNewRace />
-                        <Button icon='linkify' content='Link' style={{ backgroundColor: 'white', color: 'black' }}></Button>
-                        <ModalNewEvent />
+                        {auto && (
 
-                    </Grid.Column>
+                            <Grid.Column textAlign='center'>
+                                <ModalNewRace />
+                                <ModalLinkRaceEvent></ModalLinkRaceEvent>{/*<Button icon='linkify' content='Link' style={{backgroundColor: 'white', color: 'black'}}></Button>*/}
+                                <ModalNewEvent />
+
+                            </Grid.Column>
+                        )}
                 </Grid>
             </Segment>
     );
+
 }
-
-

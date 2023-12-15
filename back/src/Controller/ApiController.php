@@ -133,6 +133,32 @@ class ApiController extends AbstractController
         $jsonContent['events'] = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['Name', 'id', 'Address', 'StartDate', 'EndDate', 'Race' => ['id', 'Name', 'Address', 'Distance', 'PositiveDifference', 'NegativeDifference']]]);
         $jsonContent['nbPages'] = ceil($nbPages/$limit); // Add nbPages to the JSON response
 
+
+        return $this->json($jsonContent);
+    }
+
+    #[Route('/eventsCond', name: "iterate_event_cond", methods: ['GET'])]
+    public function iterateEventsCond(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
+    {
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('e')
+            ->from(Event::class, 'e')
+            ->orderBy('e.id', 'ASC');
+
+
+        $events = $queryBuilder->getQuery()->getResult();
+
+        $queryBuilder = $entityManager->createQueryBuilder()
+        ->select('COUNT(e) as total')
+        ->from(Event::class, 'e')
+        ->orderBy('e.id', 'ASC');
+
+        $nbPages = $queryBuilder->getQuery()->getSingleScalarResult();
+
+        $serializer = new Serializer([new DateTimeNormalizer(['format' => 'd-m-Y']), new ObjectNormalizer()]);
+
+        $jsonContent = $serializer->normalize($events, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'Name']]);
+
         return $this->json($jsonContent);
     }
 
@@ -222,6 +248,48 @@ class ApiController extends AbstractController
     {
         return $this->render('race/index.html.twig', [
             'races' => $raceRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/racesCond', name: "iterate_race_cond", methods: ['GET'])]
+    public function iterateRacesCond(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
+    {
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('r')
+            ->from(Race::class, 'r')
+            ->orderBy('r.id', 'ASC');
+
+        $races = $queryBuilder->getQuery()->getResult();
+
+        $jsonContent = $serializer->normalize($races, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'Name']]);
+
+        return $this->json($jsonContent);
+    }
+
+    #[Route('/link', name: 'app_link_event_race', methods: ['POST'])]
+    public function createLink(Request $request, EntityManagerInterface $entityManager, RaceRepository $raceRepository, EventRepository $eventRepository): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $eventId = $data['event'];
+        $raceId = $data['race'];
+
+        if ($data['race'] === null || $data['event'] === null) {
+            return $this->json([
+                'message' => 'missing credentials'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $race = $raceRepository->getOneRace($raceId);
+        $event = $eventRepository->getOneEvent($eventId);
+
+
+        $race->setEvent($event);
+        $event->addRace($race);
+
+        $entityManager->flush();
+
+        return $this->json([
+            'message' => 'Link created successfully',
         ]);
     }
 
@@ -318,5 +386,16 @@ class ApiController extends AbstractController
         }
 
         return $this->redirectToRoute('app_race_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/role', name: 'app_role', methods: ['POST'])]
+    public function role(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true); 
+        $repository = $entityManager->getRepository(User::class);
+        $user = $repository->getUserByToken($data['token']);
+        return $this->json([
+            'role' => $user->getRoles()
+        ]);
     }
 }
