@@ -1,8 +1,7 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List, Grid, Menu, Label, Header, Button, Modal, Segment, Form } from 'semantic-ui-react';
+import {Grid,  Header, Button, Segment} from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import ModalNewRace from './ModalNewRace';
 import ModalNewEvent from './ModalNewEvent';
 import ModalLinkRaceEvent from './ModalLinkRaceEvent';
@@ -42,8 +41,6 @@ export default function SecondaryNavBar(props) {
       });
     };
   
-
-
     return (
         <Segment color='yellow' inverted style={{marginTop: '3em'}}>
                 <Grid columns={3} relaxed='very'>
@@ -62,10 +59,10 @@ export default function SecondaryNavBar(props) {
 
                             <Grid.Column textAlign='center'>
                                 <ModalNewRace />
-                                <ModalLinkRaceEvent></ModalLinkRaceEvent>{/*<Button icon='linkify' content='Link' style={{backgroundColor: 'white', color: 'black'}}></Button>*/}
+                                <ModalLinkRaceEvent />
                                 <ModalNewEvent />
-
                             </Grid.Column>
+                            
                         )}
                 </Grid>
             </Segment>
