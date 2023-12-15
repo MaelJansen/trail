@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import ErrorPage from "./Error";
-import Connexion from './Connexion';
-import Register from './Register';
+import Login from './Login';
+import RegisterPage from './RegisterPage';
 import LoginPage from './LoginPage';
 import EventsListPage from './EventsListPage';
 import EventDetailsPage from './EventDetailsPage';
@@ -25,7 +25,7 @@ import {
         },
 
         {
-          path: "/connexion",
+          path: "/login",
           element:<LoginPage />,
           errorElement: <ErrorPage />
         },
@@ -50,7 +50,7 @@ import {
 
         {
           path: "/register",
-          element: <Register />,
+          element: <RegisterPage />,
           errorElement: <ErrorPage />
         },
       ]);
