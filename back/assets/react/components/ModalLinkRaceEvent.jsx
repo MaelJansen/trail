@@ -69,7 +69,7 @@ export default function ModalLinkRaceEvent() {
         console.log(response.data);
 
         dispatch({ event: 'onClick', name: 'onClick', type: 'CLOSE_MODAL' })
-        window.location.reload();
+        window.location.href = `/event/${selectedEvent}`;
 
       } catch (error) {
 

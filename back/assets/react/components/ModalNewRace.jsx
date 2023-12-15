@@ -62,6 +62,10 @@ export default function ModalNewRace() {
 
       // Close the modal after successful submission
       dispatch({ event: event.type, name: 'onClick', type: 'CLOSE_MODAL' });
+
+      // I wanna go to the new race page
+      window.location.href = `/race/${response.data.id}`;
+
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error(error);
