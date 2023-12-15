@@ -16,6 +16,15 @@ import {
 
 export default function Race(props) {
     
+    if (props.races.length === 0) {
+        //if theres no races, return a placeholder
+        return (
+            <Segment>
+                <Header as='h3' textAlign='center'>Aucune course</Header>
+            </Segment>
+        )
+    }
+    
     return (
         <List>{Array.isArray(props.races) && props.races.map((race, raceIndex) => (
             <Segment>
