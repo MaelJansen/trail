@@ -23,7 +23,7 @@ export default function Event(props) {
                         <Accordion styled fluid style={{ marginBottom: '2em'}}>
                             <Accordion.Title
                                 active={activeIndex === index}
-                                index={event.id-1}
+                                index={index}
                                 onClick={handleClick}
                             >
                                 <Header as='h1'><Link to={`/event/${event.id}`}>{event.Name}</Link></Header>
