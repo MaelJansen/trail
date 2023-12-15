@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import ModalNewRace from './ModalNewRace';
 import ModalNewEvent from './ModalNewEvent';
 import ModalLinkRaceEvent from './ModalLinkRaceEvent';
+import axios from 'axios';
+
+export default function SecondaryNavBar(props) {
 
   const fetchData = () => {
     let serverQuery = `http://localhost:8000/api/role`;
@@ -29,19 +32,6 @@ import ModalLinkRaceEvent from './ModalLinkRaceEvent';
       fetchData();
     }, []);
   
-    const fetchData = () => {
-      let serverQuery = `http://localhost:8000/api/role`;
-      axios
-        .post(serverQuery, token)
-  
-        .then((response) => {
-          setRoles(response.data.role);
-          checkAuthorization(response.data.role);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
   
     const checkAuthorization = (data) => {
       data.forEach((element) => {
@@ -52,6 +42,7 @@ import ModalLinkRaceEvent from './ModalLinkRaceEvent';
       });
     };
   
+
 
     return (
         <Segment color='yellow' inverted style={{marginTop: '3em'}}>
@@ -79,4 +70,5 @@ import ModalLinkRaceEvent from './ModalLinkRaceEvent';
                 </Grid>
             </Segment>
     );
+
 }
