@@ -81,30 +81,30 @@ export default function ModalNewRace() {
         dispatch({ event: e.type, name: 'onClose', type: 'CLOSE_MODAL' })
       }
       open={open}
-      trigger={<Button icon='plus' color='green' content='Race'></Button>}
+      trigger={<Button icon='plus' color='green' content='Course'></Button>}
     >
-      <Modal.Header>Create a new Race</Modal.Header>
+      <Modal.Header>Créer une nouvelle course</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit}>
           <Form.Field>
-            <label>Name</label>
-            <input placeholder='Name' type='text' name='name' />
+            <label>Nom</label>
+            <input placeholder='Nom' type='text' name='name' />
           </Form.Field>
           <Form.Field>
-            <label>Address</label>
-            <input placeholder='Address' type='text' name='address' />
+            <label>Adresse</label>
+            <input placeholder='Adresse' type='text' name='address' />
           </Form.Field>
           <Form.Field>
             <label>Distance(km)</label>
             <input placeholder='Distance' type='text' name='distance' />
           </Form.Field>
           <Form.Field>
-            <label>Positive Height Difference(m)</label>
-            <input placeholder='Positive Height Difference' type='text' name='positiveHeightDifference' />
+            <label>Dénivelé positif(m)</label>
+            <input placeholder='Dénivelé positif' type='text' name='positiveHeightDifference' />
           </Form.Field>
           <Form.Field>
-            <label>Negative Height Difference(m)</label>
-            <input placeholder='Negative Height Difference' type='text' name='negativeHeightDifference' />
+            <label>Dénivelé négatif(m)</label>
+            <input placeholder='Dénivelé négatif' type='text' name='negativeHeightDifference' />
           </Form.Field>
           <Button type='submit' positive>
             Create

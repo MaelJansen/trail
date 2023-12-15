@@ -59,9 +59,9 @@ export default function ModalLinkRaceEvent() {
     e.preventDefault();
     if (selectedEvent && selectedRace) {
        try {
-        // Make a POST request to the API endpoint
+        // Faire une requête POST vers le point d'API
         const response = await axios.post('http://localhost:8000/api/link', {
-          // Pass the form data as the request payload
+          // Passer les données du formulaire en tant que charge utile de la requête
           event: selectedEvent,
           race: selectedRace,
         });
@@ -77,7 +77,7 @@ export default function ModalLinkRaceEvent() {
       }
     } 
     else {
-      console.log('Please fill all the fields')
+      console.log('Veuillez remplir tous les champs')
     }
 
   }
@@ -88,7 +88,7 @@ export default function ModalLinkRaceEvent() {
         if (Array.isArray(response.data)) {
           setEventListCond(response.data)
           console.log(response.data)
-          //formatting the data for the dropdown
+          // Formatage des données pour le dropdown
           const eventList = response.data.map((event) => {
             return {
               key: event.id,
@@ -110,7 +110,7 @@ export default function ModalLinkRaceEvent() {
         if (Array.isArray(response.data)) {
           setRaceListCond(response.data)
           console.log(response.data)
-          //formatting the data for the dropdown
+          // Formatage des données pour le dropdown
           const raceList = response.data.map((race) => {
             return {
               key: race.id,
@@ -135,17 +135,17 @@ export default function ModalLinkRaceEvent() {
         dispatch({ event: e.type, name: 'onClose', type: 'CLOSE_MODAL' })
       }
       open={open}
-      trigger={<Button icon='plus' color='white' content='Lien'></Button>}
+      trigger={<Button icon='linkify' style={{ backgroundColor: 'white', color: 'black' }} content='Lien'></Button>}
     >
-      <Modal.Header>Associer une course a un évenement :</Modal.Header>
+      <Modal.Header>Associer une course à un événement :</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit}>
           <Form.Group widths='equal'>
             <Form.Field>
-              <label>Event</label>
+              <label>Événement</label>
               {eventList &&
                 <Dropdown
-                  placeholder='Event'
+                  placeholder='Événement'
                   name = 'event'
                   fluid
                   search
@@ -156,10 +156,10 @@ export default function ModalLinkRaceEvent() {
               }
             </Form.Field>
             <Form.Field>
-              <label>Race</label>
+              <label>Course</label>
               {raceList &&
                 <Dropdown
-                  placeholder='Race'
+                  placeholder='Course'
                   name = 'race'
                   fluid
                   search
@@ -170,7 +170,7 @@ export default function ModalLinkRaceEvent() {
               }
             </Form.Field>
           </Form.Group>
-          <Button color='green' type='submit' postive>Link</Button>
+          <Button color='green' type='submit' postive>Lier</Button>
         </Form>
       </Modal.Content>
       <Modal.Actions>
@@ -184,7 +184,7 @@ export default function ModalLinkRaceEvent() {
           }
           negative
         >
-          Cancel
+          Annuler
         </Button>
         
       </Modal.Actions>

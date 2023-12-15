@@ -49,7 +49,7 @@ export default function ModalNewEvent() {
     try {
       // Make a POST request to the API endpoint
       const response = await axios.post('http://localhost:8000/api/event/new', {
-        // Pass the form data as the request payload
+        // Pass the form data as the payload of the request
         name: event.target.name.value,
         startDate: event.target.startDate.value,
         endDate: event.target.endDate.value,
@@ -59,14 +59,14 @@ export default function ModalNewEvent() {
       // Handle the response as needed
       console.log(response.data);
 
-      // Close the modal after successful submission
+      // Close the modal window after successful submission
       dispatch({ event: event.type, name: 'onClick', type: 'CLOSE_MODAL' });
 
-      // I wanna go to the new event page
+      // Go to the page of the new event
       window.location.href = `/event/${response.data.id}`;
       
     } catch (error) {
-      // Handle any errors that occur during the API call
+      // Handle errors that occur during the API call
       console.error(error);
     }
   };
@@ -80,29 +80,29 @@ export default function ModalNewEvent() {
         dispatch({ event: e.type, name: 'onClose', type: 'CLOSE_MODAL' })
       }
       open={open}
-      trigger={<Button icon='plus' color='green' content='Event'></Button>}
+      trigger={<Button icon='plus' color='green' content='Événement'></Button>}
     >
-      <Modal.Header>Create a new Event</Modal.Header>
+      <Modal.Header>Créer un nouvel événement</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit}>
           <Form.Field>
-            <label>Name</label>
-            <input placeholder='Name' type='text' name='name' />
+            <label>Nom</label>
+            <input placeholder='Nom' type='text' name='name' />
           </Form.Field>
           <Form.Field>
-            <label>Starting Date</label>
+            <label>Date de début</label>
             <input placeholder='Date' type='date' name='startDate' />
           </Form.Field>
           <Form.Field>
-            <label>Ending Date</label>
+            <label>Date de fin</label>
             <input placeholder='Date' type='date' name='endDate' />
           </Form.Field>
           <Form.Field>
-            <label>Address</label>
-            <input placeholder='Address' type='text' name='address' />
+            <label>Adresse</label>
+            <input placeholder='Adresse' type='text' name='address' />
           </Form.Field>
           <Button type='submit' positive>
-            Create
+            Créer
           </Button>
         </Form>
       </Modal.Content>
@@ -117,7 +117,7 @@ export default function ModalNewEvent() {
           }
           negative
         >
-          Cancel
+          Annuler
         </Button>
       </Modal.Actions>
     </Modal>
