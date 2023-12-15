@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Accordion, Container, List, Header, Segment, Grid, Label, Statistic, Icon, Placeholder, Loader } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
+import { Accordion, Container, Grid, Label, Placeholder, Loader, List, Icon, Button } from 'semantic-ui-react';
 import Race from './Race';
+import ModalLinkRaceEvent from './ModalLinkRaceEvent';
+import ModalDeleteEvent from './ModalDeleteEvent';
+import ModalModifyEvent from "./ModalModifyEvent";
 
 
-export default function EventDetails(props) {
+
+export default function EventDetails() {
     const { eventId } = useParams();
+    const [roles, setRoles] = useState([]);
     const [event, setEvent] = useState(null);
+    const [auto, setAuto] = useState(false);
+    const [token] = useState({ token: localStorage.getItem("token") });
+
+    const fetchData = () => {
+        let serverQuery = `http://localhost:8000/api/role`;
+        axios
+          .post(serverQuery, token)
+    
+          .then((response) => {
+            setRoles(response.data.role);
+            checkAuthorization(response.data.role);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
 
     useEffect(() => {
         axios.get(`http://localhost:8000/api/event/${eventId}`)
@@ -18,6 +40,20 @@ export default function EventDetails(props) {
                 console.log(error);
             });
     }, []);
+  
+    useEffect(() => {
+      fetchData();
+    }, []);
+  
+  
+    const checkAuthorization = (data) => {
+      data.forEach((element) => {
+        console.log(element);
+        if (element == "ROLE_ADMIN" || element == "ROLE_ORGANIZER") {
+          setAuto(true);
+        }
+      });
+    };
 
 
     if (!event) {
@@ -31,6 +67,7 @@ export default function EventDetails(props) {
     return (
         <Container style={{ marginTop: '5em', marginBottom: '5em' }}>
             <div>
+
                 <Accordion styled fluid style={{ marginBottom: '2em' }}>
                     <Accordion.Title
                         active={true}
@@ -39,11 +76,24 @@ export default function EventDetails(props) {
                         <Grid columns={2}>
                             <Grid.Column>
                                 <h1>{event.Name}</h1>
-                                <Label.Group size='large'>
-                                    <Label>{event.StartDate}</Label>
-                                    <Label>{event.EndDate}</Label>
-                                    <Label>{event.Address}</Label>
-                                </Label.Group>
+                                {auto && (
+                                <div>
+                                    <ModalModifyEvent eventId={eventId}  eventName={event.Name} eventStartingDate={event.StartDate} eventEndDate={event.EndDate} eventAddress={event.Address}  />
+                                    <ModalDeleteEvent eventId={eventId} />
+                                </div>
+                                
+                                )}
+                                <List>
+                                    <List.Item>
+                                        <Label><Icon name='calendar'/>{event.StartDate}</Label>
+                                    </List.Item>
+                                    <List.Item>
+                                        <Label><Icon name='calendar'/>{event.EndDate}</Label>
+                                    </List.Item>
+                                    <List.Item>
+                                        <Label><Icon name='marker'/>{event.Address}</Label>
+                                    </List.Item>
+                                </List>
                             </Grid.Column>
                             <Grid.Column>
                                 <Placeholder fluid>
@@ -54,6 +104,7 @@ export default function EventDetails(props) {
                     </Accordion.Title>
                     <Accordion.Content active={true}>
                         <Race races={event.Race} />
+                        {auto && (<ModalLinkRaceEvent eventId={eventId}/>)}
                     </Accordion.Content>
                 </Accordion>
             </div>
