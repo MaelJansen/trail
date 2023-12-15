@@ -7,11 +7,12 @@ import EventDetails from './EventDetails';
 
 
 export default function EventsListPage() {
-    return (<>
+    return (
+        <>
             <Header />
-            <SecondaryNavBar />
+            <SecondaryNavBar title="Détails de l'évènement" />
             <EventDetails />
             <Footer />
-            </>
-            );
+        </>
+    );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Accordion, Container, List, Grid, Segment, Label, Header, Button, Modal, Form } from 'semantic-ui-react';
+import { Accordion, Container, List, Grid, Menu, Label, Header, Button, Modal, Segment, Form } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ModalNewRace from './ModalNewRace';
@@ -9,21 +9,21 @@ import ModalLinkRaceEvent from './ModalLinkRaceEvent';
 
 
 
-export default function SecondaryNavBar() {
+
+export default function SecondaryNavBar(props) {
 
     return (
-        <div>
-            <Segment color='yellow' inverted>
+        <Segment color='yellow' inverted style={{marginTop: '3em'}}>
                 <Grid columns={3} relaxed='very'>
                     <Grid.Column>
-                        <Header as='h2' color='black' inverted textAlign='center'>
-                            Events
+                        <Header style={{margin: '0'}} as='h2' color='black' inverted textAlign='center'>
+                             {props.title}
                         </Header>
                     </Grid.Column>
                     <Grid.Column textAlign='center'>
                         <Button.Group>
-                            <Button active attached='left' inverted color='orange'>List</Button>
-                            <Button attached='right' style={{backgroundColor: 'white', color: 'black'}}>Map</Button>
+                            <Button icon='list' href='/events' active inverted color='orange'>Liste</Button>
+                            <Button icon='map outline' style={{ backgroundColor: 'white', color: 'black' }}>Carte</Button>
                         </Button.Group>
                     </Grid.Column>
                     <Grid.Column textAlign='center'>
@@ -34,7 +34,6 @@ export default function SecondaryNavBar() {
                     </Grid.Column>
                 </Grid>
             </Segment>
-        </div>
     );
 }
 

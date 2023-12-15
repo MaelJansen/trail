@@ -6,6 +6,7 @@ import Register from './Register';
 import LoginPage from './LoginPage';
 import EventsListPage from './EventsListPage';
 import EventDetailsPage from './EventDetailsPage';
+import RaceDetailsPage from './RaceDetailsPage';
 import { Link } from "react-router-dom";
 
 
@@ -34,11 +35,19 @@ import {
           element:<EventsListPage />,
           errorElement: <ErrorPage />
         },
+
         {
           path: "/event/:eventId",
           element:<EventDetailsPage />,
           errorElement: <ErrorPage />
         },
+
+        {
+          path: "/race/:raceId",
+          element:<RaceDetailsPage />,
+          errorElement: <ErrorPage />
+        },
+
         {
           path: "/register",
           element: <Register />,
